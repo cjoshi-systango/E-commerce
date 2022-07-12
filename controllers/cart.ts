@@ -35,6 +35,16 @@ class CartController{
             
         }
     }
+
+    async removeFromCart(req:any,res:any){
+        try {
+            await cartServices.removeFromCart(req);
+            res.status(200).json({success:true,message:"deleted successfully"});
+
+        } catch (error) {
+            res.status(200).json({success:false,data:error});
+        }
+    }
 }
 
 let cartController = new CartController();

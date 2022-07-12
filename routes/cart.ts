@@ -7,5 +7,5 @@ router.post("/product/:id/addtocart",auth,cartController.addToCart)
 
 router.get("/viewcart",auth,cartController.viewCart)
 
-router.get("/viewcart/:id/remove")
+router.delete("/viewcart/:id/remove",auth,cartController.removeFromCart);
 export default router;
