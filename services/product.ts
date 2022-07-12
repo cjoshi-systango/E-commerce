@@ -57,9 +57,9 @@ class ProductServices {
     }
 
     async getProductPrice(req:any){
-        let price = await product.findOne({attributes:["price"],where:{id:req.params.id}})
+        let price:any = await product.findOne({attributes:["price"],where:{id:req.params.id}})
 
-        return price;
+        return price.price;
     }
 
     async getProductQuantity(req:any){
@@ -68,6 +68,11 @@ class ProductServices {
         let quantity:any = await productInventoryServices.sendProductQuantity(oneProduct.inventory_id)
         
         return quantity.quantity;
+    }
+
+    async changeProductQuantity(req:any){
+        let inventoryId:any = await product.findOne({attributes:["inventory_id"],where:{id:req.params.id}})
+        await productInventoryServices.changeQuantity(req,inventoryId.inventory_id);
     }
 }
 

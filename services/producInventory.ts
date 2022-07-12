@@ -29,6 +29,10 @@ class ProductInventoryServices {
             });
         })
     }
+
+    async changeQuantity(req:any,id:any){
+        await productInventory.increment({quantity:-req.body.quantity},{where:{id:id}})
+    }
 }
 
 const productInventoryServices = new ProductInventoryServices();
