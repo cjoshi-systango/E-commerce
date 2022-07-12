@@ -42,8 +42,8 @@ class ProductServices {
         return allProduct;
     }
 
-    async showOneProduct(req:any){
-        let oneProduct:any = await product.findOne({where:{id:req.params.id}});
+    async showOneProduct(id:any){
+        let oneProduct:any = await product.findOne({where:{id:id}});
         
         await productInventoryServices.sendProductQuantity(oneProduct.inventory_id)
         .then((quantity:any)=>{

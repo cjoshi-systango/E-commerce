@@ -3,11 +3,18 @@ import Credentials from "../constants/credentialsConstant";
 import user from "../models/user";
 
 const auth = async(req:any,res:any,next:any)=>{
-
+    
+    if(req.session.passport == undefined){
+        res.status(400).json({success:false, message:" please login first "}); 
+        return
+    } 
     const token=req.session.passport.user
     let decoded:any
 
-    if(!token) return res.sendStatus(400).json({success:false, data:" NO Token is provided "})
+    if(!token){ 
+        res.status(400).json({success:false, data:" NO Token is provided "})
+        return
+    } 
     
     try
     {
@@ -20,7 +27,7 @@ const auth = async(req:any,res:any,next:any)=>{
         next()
     }
     catch{
-        return res.sendStatus(400).json({success:false, data:"Invalid Token"})
+        return res.status(400).json({success:false, data:"Invalid Token"})
     }
 }
 

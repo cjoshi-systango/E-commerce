@@ -12,10 +12,26 @@ class CartController{
                 res.status(400).json({success:false,data:"Can't add more than Stock"})
             }
             else{
-                res.status(200).json({success:false,data:"added succesfully"});
+                res.status(200).json({success:true,data:"added succesfully"});
             }
         } catch (error) {
             res.status(500).json({success:false,data:error});
+            
+        }
+    }
+
+    async viewCart(req:any,res:any){
+        try {
+           let cartData = await cartServices.viewCart(req)
+           if(typeof cartData == "string"){
+              res.status(200).json({success:true,message:"cart is empty"});
+           }
+           else{
+                res.status(200).json({success:true,data:cartData});
+           }
+
+        } catch (error) {
+           res.status(500).json({success:false,data:error});
             
         }
     }

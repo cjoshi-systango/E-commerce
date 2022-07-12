@@ -1,3 +1,4 @@
+import e from "cors";
 import { where } from "sequelize/types";
 import cart from "../models/cart";
 import productServices from "./product";
@@ -10,7 +11,9 @@ class CartServices {
             let product:any = await cart.findOne({where:{productId:req.params.id,userId:req.user.id}})
             console.log(product);
             if(product){
-                await cart.increment({quantity:req.body.quantity},{where:{productId:req.params.id,userId:req.user.id}})
+                let price :any= productServices.getProductPrice(req);
+                let totalAmount = req.body.quantity * price;
+                await cart.increment({quantity:req.body.quantity,total_amount:totalAmount},{where:{productId:req.params.id,userId:req.user.id}})
             }
             else{
                 let price :any= productServices.getProductPrice(req);
@@ -26,6 +29,24 @@ class CartServices {
             return "quantity error";
         }
 
+    }
+
+    async viewCart(req:any){
+
+        let cartData:any = await cart.findAll({where:{userId:req.user.id}});
+        if(cartData){
+            for(const element of cartData){
+                let product = await productServices.showOneProduct(element.productId)
+                element.dataValues.productName = product.name;
+                element.dataValues.productdetails = product.details;
+                element.dataValues.productPrice = product.price;
+            }
+            return cartData
+        }
+        else{
+            return "cart is empty"
+        }
+       
     }
 }
 
