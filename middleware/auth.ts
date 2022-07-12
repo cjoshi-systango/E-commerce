@@ -12,7 +12,7 @@ const auth = async(req:any,res:any,next:any)=>{
     let decoded:any
 
     if(!token){ 
-        res.status(400).json({success:false, data:" NO Token is provided "})
+        res.status(400).json({success:false, message:" NO Token is provided "})
         return
     } 
     
@@ -27,7 +27,7 @@ const auth = async(req:any,res:any,next:any)=>{
         next()
     }
     catch{
-        return res.status(400).json({success:false, data:"Invalid Token"})
+        return res.status(400).json({success:false, message:"Invalid Token"})
     }
 }
 

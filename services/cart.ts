@@ -34,7 +34,7 @@ class CartServices {
     async viewCart(req:any){
 
         let cartData:any = await cart.findAll({where:{userId:req.user.id}});
-        if(cartData){
+        if(cartData.length>0){
             for(const element of cartData){
                 let product = await productServices.showOneProduct(element.productId)
                 element.dataValues.productName = product.name;
@@ -44,9 +44,15 @@ class CartServices {
             return cartData
         }
         else{
+            console.log("--------------");
+            
             return "cart is empty"
         }
        
+    }
+
+    async removeFromCart(req:any){
+        await cart.destroy({where:{productId:req.params.id,userId:req.user.id}})
     }
 }
 
