@@ -33,7 +33,7 @@ class ProductController{
 
     async showOneProduct(req:any,res:any){
         try {
-            let oneProduct = await productServices.showOneProduct(req);
+            let oneProduct = await productServices.showOneProduct(req.params.id);
             res.status(200).json({success:true,data:oneProduct});
         } catch (error) {
             res.status(400).json({success:true,data:error});

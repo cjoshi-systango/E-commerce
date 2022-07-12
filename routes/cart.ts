@@ -5,4 +5,7 @@ const router = express.Router();
 
 router.post("/product/:id/addtocart",auth,cartController.addToCart)
 
+router.get("/viewcart",auth,cartController.viewCart)
+
+router.get("/viewcart/:id/remove")
 export default router;
