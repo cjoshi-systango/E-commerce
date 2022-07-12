@@ -40,6 +40,17 @@ class ProductController{
             
         }
     }
+
+    async deleteProduct(req:any,res:any){
+        try {
+            await productServices.deleteProduct(req);
+
+            res.status(200).json({success:true,message:"deleted successfully"});
+        } catch (error) {
+            res.status(500).json({success:false,error:"deleted successfully"});
+            
+        }
+    }
 }
 
 const productController = new ProductController();
