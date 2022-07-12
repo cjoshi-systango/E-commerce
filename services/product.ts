@@ -3,6 +3,7 @@ import product from "../models/product";
 import productInventoryServices from "./producInventory";
 import userPermission from "../utils/userPermission";
 import productInventoryControler from "../controllers/productInventory";
+import sequelize from "../db/sequelizeConnection";
 class ProductServices {
     async addProduct(req: any) {
         let temp = await userPermission.userPermissions(req).then((userPermission: any) => {
@@ -73,6 +74,19 @@ class ProductServices {
     async changeProductQuantity(req:any){
         let inventoryId:any = await product.findOne({attributes:["inventory_id"],where:{id:req.params.id}})
         await productInventoryServices.changeQuantity(req,inventoryId.inventory_id);
+    }
+
+    async deleteProduct(req:any){
+        sequelize.query('SET FOREIGN_KEY_CHECKS = 0').then(async()=> {
+            await product.destroy({where:{id:req.params.id,added_by:req.user.id}}).then(function() {
+                    sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
+                }).catch((err) =>{
+                    console.log(err);
+                });;
+        }).catch((err)=> {
+            console.log(err);
+        });
+        
     }
 }
 
