@@ -1,5 +1,7 @@
 import sequelize from "../db/sequelizeConnection";
 import { DataTypes, Sequelize } from "sequelize";
+import user from "./user";
+import product from "./product";
 
 const order = sequelize.define('order',{
     id:{
@@ -14,7 +16,8 @@ const order = sequelize.define('order',{
     },
     status:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
+        defaultValue:"yet to dispatch"
     },
     amount:{
         type:DataTypes.INTEGER,
@@ -24,5 +27,7 @@ const order = sequelize.define('order',{
 },{
     freezeTableName:true
 })
+user.hasMany(order);
+product.hasMany(order);
 
 export default order;

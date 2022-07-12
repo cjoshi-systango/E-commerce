@@ -11,6 +11,7 @@ import passportInitialize from '../config/passport-config'
 import sequelize from "../db/sequelizeConnection";
 import productRouter from '../routes/product';
 import cartRouter from "../routes/cart"
+import orderRouter from "../routes/order"
 
 const PORT = process.env.PORT||4002
 const app = express();
@@ -35,6 +36,7 @@ app.use(passport.session());
 app.use("/e-commerce",userRouter)
 app.use("/e-commerce",productRouter)
 app.use("/e-commerce",cartRouter)
+app.use("/e-commerce",orderRouter)
 
 
 
