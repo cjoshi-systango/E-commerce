@@ -1,13 +1,14 @@
 import dotenv from "dotenv"
 dotenv.config();
 import nodemailer from "nodemailer"
-import { pugEngine } from "nodemailer-pug-engine";
+import { pugEngine }    from "nodemailer-pug-engine";
+import pug from "pug"
 import Mail from "../constants/mailConstants";
 
 class Mailsender{
     sendMail(sendTo:string,dataToSend:string|number)
     {
-        let templatePath = '../e-commerce/views/'
+        let templatePath = '../E-commerce/views/'
 
         let transporter = nodemailer.createTransport({
             service: Mail.SERVICE,
@@ -17,9 +18,12 @@ class Mailsender{
             }
         });
 
+        let data = {
+            password:dataToSend,
+        }
+
         transporter.use('compile', pugEngine({
             templateDir: templatePath,
-
         }))
 
         let mailOptions = {
@@ -27,7 +31,7 @@ class Mailsender{
             to: sendTo,
             subject: Mail.SUBJECT,
             text: Mail.TEXT + dataToSend,
-            template: 'mail'
+            html: pug.renderFile("../E-commerce/views/mail.pug", { password:dataToSend})
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -39,3 +43,6 @@ class Mailsender{
         });
     }
 }
+
+let mailSender = new Mailsender;
+export default mailSender;
