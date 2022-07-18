@@ -15,4 +15,6 @@ router.post("/login", passport.authenticate("local", {failureMessage: true}), us
 
 router.get("/logout",userController.logOutUser)
 
+router.put("/forgetpassword",userController.forgetPassword)
+
 export default router
