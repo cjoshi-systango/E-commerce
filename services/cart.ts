@@ -44,8 +44,6 @@ class CartServices {
             return cartData
         }
         else{
-            console.log("--------------");
-            
             return "cart is empty"
         }
        

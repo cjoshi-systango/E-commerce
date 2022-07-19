@@ -12,16 +12,21 @@ import sequelize from "../db/sequelizeConnection";
 import productRouter from '../routes/product';
 import cartRouter from "../routes/cart"
 import orderRouter from "../routes/order"
+import swaggerUi from "swagger-ui-express";
+import fs from "fs"
 
 const PORT = process.env.PORT||4002
 const app = express();
 sequelize.sync({alter:true});
 passportInitialize(passport);
 const MemoryStore = new session.MemoryStore();
+let swaggerFile:any = (process.cwd()+"/swagger/swagger.json")
+let swaggerdata = JSON.parse(fs.readFileSync(swaggerFile,'utf-8'));
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerdata))
 
 app.use(session({
     secret:`${process.env.SECRET}`,

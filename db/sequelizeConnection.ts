@@ -1,16 +1,9 @@
+import dotenv from 'dotenv'
+dotenv.config();
 import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize('e-commerce','root','root',{
+const sequelize = new Sequelize(`${process.env.DB_NAME}`,`${process.env.DB_USERNAME}`,`${process.env.DB_PASS}`,{
     dialect: "mysql",
 })
-
-// sequelize.authenticate()
-// .then(()=>{
-//     console.log("connection established");    
-// })
-// .catch(err=>{
-//     console.log("not connected" + err);
-    
-// })
 
 export default sequelize;

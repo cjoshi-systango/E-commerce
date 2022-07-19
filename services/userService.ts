@@ -35,12 +35,20 @@ class UserServices {
 
     }
 
-    async insertUserRole(req:express.Request){
-        await userRole.create({title:req.body.title,
-            read:req.body.read,
-            write:req.body.write,
-            delete:req.body.delete
-        });
+    async insertUserRole(req:any){
+        let userTitle:any = await userRole.findOne({attributes:["title"],where:{id:req.user.userRoleId}})
+        console.log(userTitle.title);
+        if(userTitle.title == "Admin"){
+            await userRole.create({title:req.body.title,
+                read:req.body.read,
+                write:req.body.write,
+                delete:req.body.delete
+            });
+        }
+        else{
+            return "Only admin can create userrole";
+        }
+        
     }
     
 
@@ -53,7 +61,7 @@ class UserServices {
             address_line2:req.body.addressLine2,
             city:req.body.city,
             country:req.body.country,
-            pincode:req.body.pincode
+            pincode:req.body.pincode // primary or secondary and work or home 
         })
         
         
@@ -80,6 +88,22 @@ class UserServices {
         .then(()=>{
             mailSender.sendMail("chetanjoshi7568@gmail.com",password);
         })
+    }
+
+    async resetPassword(req:any){
+
+        let userpassword:any = await user.findOne({attributes:['password'],where:{id:req.user.id}})
+
+        let passwordcheck = bcrypt.compareSync(req.body.oldpassword,userpassword.password);
+
+        if(passwordcheck){
+            let encryptedPassword = bcrypt.hashSync(req.body.newpassword, 10);
+            await user.update({password:encryptedPassword},{where:{email:req.user.id}})
+        }
+        else{
+            return "Invalid user password"
+        }
+        
     }
 
 }

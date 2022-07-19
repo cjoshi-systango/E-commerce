@@ -21,8 +21,13 @@ class UserController {
 
     async insertUserRole(req:express.Request,res:express.Response){
         try {
-            await userServices.insertUserRole(req);
-            res.status(200).json({success:true,data:"insert successfully"})
+            let roleInserted =  await userServices.insertUserRole(req);
+            if(typeof roleInserted == "string"){
+                res.status(200).json({success:true,message:roleInserted})
+            }
+            else{
+                res.status(200).json({success:true,data:"insert successfully"})
+            }
         } catch (error) {
             res.status(400).json({success:false,data:error})
             
@@ -69,6 +74,23 @@ class UserController {
         try {
             await userServices.forgetPassword(req);
             res.status(200).json({ success: true, message:"check your mail"});
+            
+        } catch (error) {
+            res.status(500).json({ success: false, error:error});
+            
+        }
+    }
+
+    async resetPassword(req:express.Request,res:express.Response){
+        try {
+            let isResetDone = await userServices.resetPassword(req);
+            if(typeof isResetDone == 'string'){
+                res.status(200).json({ success: true, message:isResetDone});
+
+            }
+            else{
+                res.status(200).json({ success: true, message:"check your mail"});
+            }
             
         } catch (error) {
             res.status(500).json({ success: false, error:error});
