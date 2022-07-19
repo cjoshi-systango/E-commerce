@@ -1,0 +1,401 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: E-commerce
+  description: api docs for e-commerce
+servers:
+  - url: http://localhost:4002/e-commerce
+components:
+  securitySchemas:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+  -BasicAuth: []
+tags:
+  - name: User
+    description: All the user related api
+  - name: Order
+    description: All the order realted api
+  - name: Cart
+    description: All the cart realted api
+  - name: Product
+    description: All the product realted api
+paths:
+  /register:
+    post:
+      description: Register user
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Register your self
+        required: true
+        schema:
+          $ref: '#/definations/User'
+      responses:
+        default:
+          description: Inserted Successfully
+  /login:
+    post:
+      description: login user
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: email
+        description: The email for login
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: password
+        description: The password for login in clear text
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+        400:
+          description: Invalid username/password supplied
+  /logout:
+    get:
+      description: loged out current user session
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        default:
+          description: loged out
+  /insert/userrole:
+    post:
+      description: only admin can create user role
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Enter user roles
+        required: true
+        schema:
+          $ref: '#/definations/User_role'
+      responses:
+        default:
+          description: Inserted successfully
+  /insert/useraddress:
+    post:
+      description: only loged in can add user address
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Enter your address
+        required: true
+        schema:
+          $ref: '#/definations/User_address'
+      responses:
+        default:
+          description: Inserted successfully
+  /forgepassword:
+    put:
+      description: user forget password
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: email
+        description: Enter registred email 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+        400:
+          description: Invalid email supplied
+  /resetpassword:
+    put:
+      description: reset password 
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: oldpassword
+        description: Enter your password 
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: newpassword
+        description: Enter new password 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid email supplied
+  /addproduct:
+    post:
+      description: Add product
+      tags:
+        - Product
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Add product
+        required: true
+        schema:
+          $ref: '#/definations/product'
+      responses:
+        default:
+          description: Inserted Successfully
+  /product:
+    get:
+      description: get all product
+      tags:
+        - Product
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definations/product'
+        400:
+          description: Not found
+  /product/{id}:
+    get:
+      description: get all product
+      tags:
+        - Product
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: path
+        name: id
+        description: get product by id
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definations/product'
+        400:
+          description: Invaid id
+        404:
+          description: not found
+  /product/{id}:
+    delete:
+      description: get all product
+      tags:
+        - Product
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: path
+        name: id
+        description: get product by id
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: deleted successfully
+        400:
+          description: Invaid id
+        404:
+          description: not found
+  /product/{id}/addtocart:
+    post:
+      description: add product to cart
+      tags:
+        - Cart
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: path
+        name: id
+        description: Add product id
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: added successfully
+        400:
+          description: Invaid id
+        404:
+          description: not found
+  /viewcart:
+    get:
+      description: add product to cart
+      tags:
+        - Cart
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successfully operation
+          schema:
+            $ref: '#/definations/cart'
+        400:
+          description: Cart is empty
+  /viewcart/{id}/remove:
+    delete:
+      description: remove item from cart
+      tags:
+        - Cart
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: path
+        name: id
+        description: remove product from cart by id
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      responses:
+        200:
+          description: added successfully
+        400:
+          description: Invaid id
+  /product/{id}/order:
+    post:
+      description: remove item from cart
+      tags:
+        - Cart
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: path
+        name: id
+        description: place order by id
+        required: true
+        type: integer
+        maximum: 10.0
+        minimum: 1.0
+        format: int64
+      - in: body
+        name: body
+        description: remove product from cart by id
+        required: true
+        schema:
+          $ref: '#/definations/order'
+      responses:
+        200:
+          description: added successfully
+        400:
+          description: Invaid id
+definations:
+  User:
+    type: object
+    properties:
+      fullname:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      mobile_no:
+        type: string
+      title:
+        type: string
+  User_role:
+    type: object
+    properties:
+      tilte:
+        type: string
+      read:
+        type: boolean
+      write:
+        type: boolean
+      delete:
+        type: boolean
+  User_address:
+    type: object
+    properties:
+      addressLine1:
+        type: string
+      addressLine2:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      pincode:
+        type: int64
+  product:
+    type: object
+    properties:
+      name:
+        type: string
+      details:
+        type: string
+      quantity:
+        type: int64
+      price:
+        type: int64
+  cart:
+    type: object
+    properties:
+      id:
+        type: int64
+      productName:
+        type: string
+      productPrice:
+        type: int64
+      productDetails:
+        type: int64
+  order:
+    type: object
+    properties:
+      quantity:
+        type: int64
+      
