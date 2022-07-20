@@ -1,5 +1,6 @@
 import orderServices from "../services/order";
 import CommonResponse from "../constants/commonResponsesConstants";
+import {Request,Response} from 'express'
 class OrderController{
     async createOrder(req:any,res:any){
         try {
@@ -15,6 +16,21 @@ class OrderController{
             }
         } catch (error) {
             res.status(500).json({success:false,error:error});
+        }
+    }
+
+    async getOrderHistory(req:Request,res:Response){
+        try {
+            let orders = await orderServices.getOrderHistory(req);
+            if(typeof orders == 'string'){
+                res.status(200).json({success:true,message:orders})
+            }
+            else{
+                res.status(200).json({success:true,data:orders})
+            }
+        } catch (error) {
+            res.status(500).json({success:false,error:error});
+            
         }
     }
 }

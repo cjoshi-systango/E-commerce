@@ -1,4 +1,6 @@
+import { Model } from "sequelize/types";
 import order from "../models/order";
+import product from "../models/product";
 import productServices from "./product";
 import userServices from "./userService";
 class OrderServices{
@@ -28,6 +30,18 @@ class OrderServices{
             return `Sorry only ${productAvailableInStock} left in stock`;
         }
     }
+
+    async getOrderHistory(req:any){
+        let orderByUser:any = await product.findOne({include:[{model:order,where:{userId:req.user.id}}]})
+        console.log(orderByUser.length);
+        
+        if(orderByUser){
+            return orderByUser;
+        }else{
+            return 'No order history';
+        }
+    }
+
 }
 
 let orderServices = new OrderServices;

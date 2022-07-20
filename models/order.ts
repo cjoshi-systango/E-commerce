@@ -30,4 +30,5 @@ const order = sequelize.define('order',{
 user.hasMany(order);
 product.hasMany(order);
 
+
 export default order;
