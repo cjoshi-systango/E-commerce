@@ -98,7 +98,7 @@ class UserServices {
 
         if(passwordcheck){
             let encryptedPassword = bcrypt.hashSync(req.body.newpassword, 10);
-            await user.update({password:encryptedPassword},{where:{email:req.user.id}})
+            await user.update({password:encryptedPassword},{where:{id:req.user.id}})
         }
         else{
             return "Invalid user password"

@@ -17,6 +17,6 @@ router.get("/logout",auth,userController.logOutUser)
 
 router.put("/forgetpassword",userController.forgetPassword)
 
-router.put("/reserpassword",auth,userController.resetPassword)
+router.put("/resetpassword",auth,userController.resetPassword)
 
 export default router
