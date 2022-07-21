@@ -11,13 +11,11 @@ class OrderServices{
         if(productAvailableInStock>=req.body.quantity)
         {
             let userAddress:any = await userServices.findUserAddress(req);
-            if(userAddress.length>0){
+            if(userAddress){
                 let price:any = await productServices.getProductPrice(req)
                 let totalAmount = price * req.body.quantity;
                 console.log(totalAmount);
-                await order.create({quantity:req.body.quantity,userId:req.user.id,productId:req.params.id,amount:totalAmount}).then(async()=>{
-                    await productServices.changeProductQuantity(req);
-                })
+                await order.create({quantity:req.body.quantity,userId:req.user.id,productId:req.params.id,amount:totalAmount})
             }
             else{
                 return "please add address first";
@@ -25,8 +23,6 @@ class OrderServices{
             
         }
         else{
-            console.log("---");
-            
             return `Sorry only ${productAvailableInStock} left in stock`;
         }
     }

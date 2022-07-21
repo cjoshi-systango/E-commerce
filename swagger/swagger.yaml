@@ -30,13 +30,12 @@ paths:
       produces:
       - application/json
       - application/xml
-      parameters:
-      - in: body
-        name: body
-        description: Register your self
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definations/User'
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/User'
       responses:
         default:
           description: Inserted Successfully
@@ -87,13 +86,12 @@ paths:
       produces:
       - application/json
       - application/xml
-      parameters:
-      - in: body
-        name: body
-        description: Enter user roles
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definations/User_role'
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/User_role'
       responses:
         default:
           description: Inserted successfully
@@ -105,13 +103,12 @@ paths:
       produces:
       - application/json
       - application/xml
-      parameters:
-      - in: body
-        name: body
-        description: Enter your address
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definations/User_address'
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/User_address'
       responses:
         default:
           description: Inserted successfully
@@ -169,13 +166,12 @@ paths:
       produces:
       - application/json
       - application/xml
-      parameters:
-      - in: body
-        name: body
-        description: Add product
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definations/product'
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/product'
       responses:
         default:
           description: Inserted Successfully
@@ -260,7 +256,7 @@ paths:
         type: integer
         maximum: 10.0
         minimum: 1.0
-        format: int64
+        format: integer
       responses:
         200:
           description: added successfully
@@ -299,7 +295,7 @@ paths:
         type: integer
         maximum: 10.0
         minimum: 1.0
-        format: int64
+        format: integer
       responses:
         200:
           description: added successfully
@@ -321,13 +317,13 @@ paths:
         type: integer
         maximum: 10.0
         minimum: 1.0
-        format: int64
-      - in: body
-        name: body
-        description: remove product from cart by id
+        format: integer
+      requestBody:
         required: true
-        schema:
-          $ref: '#/definations/order'
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/order'
       responses:
         200:
           description: added successfully
@@ -370,7 +366,7 @@ definations:
       country:
         type: string
       pincode:
-        type: int64
+        type: integer
   product:
     type: object
     properties:
@@ -379,23 +375,23 @@ definations:
       details:
         type: string
       quantity:
-        type: int64
+        type: integer
       price:
-        type: int64
+        type: integer
   cart:
     type: object
     properties:
       id:
-        type: int64
+        type: integer
       productName:
         type: string
       productPrice:
-        type: int64
+        type: integer
       productDetails:
-        type: int64
+        type: integer
   order:
     type: object
     properties:
       quantity:
-        type: int64
+        type: integer
       
