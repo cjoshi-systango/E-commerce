@@ -61,6 +61,9 @@ class Validation{
 	};
 
 	async addProductValidation (req:any, res:any, next:any){
+		console.log("----------------");
+		console.log(req.body.name);
+		
 		const productData = {
 			name: req.body.name,
 			details: req.body.details,

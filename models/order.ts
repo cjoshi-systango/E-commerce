@@ -2,6 +2,7 @@ import sequelize from "../db/sequelizeConnection";
 import { DataTypes, Sequelize } from "sequelize";
 import user from "./user";
 import product from "./product";
+import productInventory from "./productInventory";
 
 const order = sequelize.define('order',{
     id:{
@@ -29,6 +30,11 @@ const order = sequelize.define('order',{
 })
 user.hasMany(order);
 product.hasMany(order);
+order.belongsTo(product);
+order.addHook('afterCreate',async(order:any,option:any)=>{
+    let inventoryId:any = await product.findOne({attributes:["inventory_id"],where:{id:order.productId}})
+    await productInventory.increment({quantity:-order.quantity},{where:{id:inventoryId.inventory_id}});
+})
 
 
 export default order;
