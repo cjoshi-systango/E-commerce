@@ -30,4 +30,10 @@ productInventory.hasOne(product,{
 user.hasOne(product,{
     foreignKey:"added_by"
 });
+product.belongsTo(productInventory,{
+    foreignKey:"inventory_id"
+})
+product.belongsTo(user,{
+    foreignKey:"added_by"
+});
 export default product;

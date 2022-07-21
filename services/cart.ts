@@ -2,6 +2,7 @@ import e from "cors";
 import { where } from "sequelize/types";
 import cart from "../models/cart";
 import productServices from "./product";
+import product from "../models/product";
 class CartServices {
     async addToCart(req: any) {
 
@@ -9,7 +10,6 @@ class CartServices {
 
         if (quantity >= req.body.quantity) {
             let product:any = await cart.findOne({where:{productId:req.params.id,userId:req.user.id}})
-            console.log(product);
             if(product){
                 let price :any= productServices.getProductPrice(req);
                 let totalAmount = req.body.quantity * price;
@@ -33,14 +33,8 @@ class CartServices {
 
     async viewCart(req:any){
 
-        let cartData:any = await cart.findAll({where:{userId:req.user.id}});
+        let cartData:any = await cart.findAll({where:{userId:req.user.id},include:product});
         if(cartData.length>0){
-            for(const element of cartData){
-                let product = await productServices.showOneProduct(element.productId)
-                element.dataValues.productName = product.name;
-                element.dataValues.productdetails = product.details;
-                element.dataValues.productPrice = product.price;
-            }
             return cartData
         }
         else{

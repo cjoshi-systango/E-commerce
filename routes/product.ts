@@ -10,6 +10,6 @@ router.get("/product",auth,productController.showAllProduct)
 
 router.get("/product/:id",auth,productController.showOneProduct);
 
-router.delete("/product/:id",auth)
+router.delete("/product/:id/delete",auth)
 
 export default router;

@@ -216,7 +216,7 @@ paths:
           description: Invaid id
         404:
           description: not found
-  /product/{id}:
+  /product/{id}/delete:
     delete:
       description: get all product
       tags:
@@ -257,6 +257,12 @@ paths:
         maximum: 10.0
         minimum: 1.0
         format: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/addToCart'
       responses:
         200:
           description: added successfully
@@ -390,6 +396,11 @@ definations:
       productDetails:
         type: integer
   order:
+    type: object
+    properties:
+      quantity:
+        type: integer
+  addToCart:
     type: object
     properties:
       quantity:

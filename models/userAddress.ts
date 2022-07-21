@@ -34,4 +34,5 @@ const user_address = sequelize.define("user_address",{
     freezeTableName:true
 })
 user.hasOne(user_address);
+user_address.belongsTo(user);
 export default user_address; 

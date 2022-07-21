@@ -304,6 +304,44 @@
       }
     },
     "/product/{id}": {
+      "get": {
+        "description": "get all product",
+        "tags": [
+          "Product"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "get product by id",
+            "required": true,
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definations/product"
+            }
+          },
+          "400": {
+            "description": "Invaid id"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/product/{id}/delete": {
       "delete": {
         "description": "get all product",
         "tags": [
@@ -360,6 +398,16 @@
             "format": "integer"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/addToCart"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "added successfully"
@@ -564,6 +612,14 @@
       }
     },
     "order": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "integer"
+        }
+      }
+    },
+    "addToCart": {
       "type": "object",
       "properties": {
         "quantity": {
