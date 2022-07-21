@@ -24,5 +24,6 @@ const cart = sequelize.define('cart',{
 
 user.hasMany(cart);
 product.hasMany(cart);
-
+cart.belongsTo(user);
+cart.belongsTo(product);
 export default cart;

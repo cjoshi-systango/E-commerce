@@ -24,6 +24,8 @@ function passportInitialize(passport:any){
                     return done(null, userInfo);
     
                 }).catch((error: any) => {
+                    console.log(error);
+                    
                     return done(null, "something wrong");
                 })
     

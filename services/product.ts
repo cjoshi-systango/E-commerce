@@ -1,9 +1,9 @@
-import { array } from "joi";
 import product from "../models/product";
 import productInventoryServices from "./producInventory";
 import userPermission from "../utils/userPermission";
 import productInventoryControler from "../controllers/productInventory";
 import sequelize from "../db/sequelizeConnection";
+import productInventory from "../models/productInventory";
 class ProductServices {
     async addProduct(req: any) {
         let temp = await userPermission.userPermissions(req).then((userPermission: any) => {
@@ -29,31 +29,12 @@ class ProductServices {
     }
     
     async showAllProduct(){
-        let allProduct:any = await product.findAll();
-        for (let index = 0; index < allProduct.length ; index++) {
-            await productInventoryServices.sendProductQuantity(allProduct[index].inventory_id)
-            .then((quantity:any)=>{
-                allProduct[index].dataValues.quantity = quantity.quantity
-                console.log(allProduct);
-            })
-            .catch(err=>{
-                console.log(err);
-            });
-        }
+        let allProduct:any = await product.findAll({include:productInventory});
         return allProduct;
     }
 
     async showOneProduct(id:any){
-        let oneProduct:any = await product.findOne({where:{id:id}});
-        
-        await productInventoryServices.sendProductQuantity(oneProduct.inventory_id)
-        .then((quantity:any)=>{
-            oneProduct.dataValues.quantity = quantity.quantity
-        })
-        .catch(err=>{
-            console.log(err);
-            
-        });
+        let oneProduct:any = await product.findOne({where:{id:id},include:productInventory});
         return oneProduct;
     }
 
