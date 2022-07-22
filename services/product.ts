@@ -58,16 +58,8 @@ class ProductServices {
     }
 
     async deleteProduct(req:any){
-        sequelize.query('SET FOREIGN_KEY_CHECKS = 0').then(async()=> {
-            await product.destroy({where:{id:req.params.id,added_by:req.user.id}}).then(function() {
-                    sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
-                }).catch((err) =>{
-                    console.log(err);
-                });;
-        }).catch((err)=> {
-            console.log(err);
-        });
         
+        await product.destroy({where:{id:req.params.id,added_by:req.user.id}})    
     }
 }
 

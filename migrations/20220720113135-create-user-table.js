@@ -29,6 +29,8 @@ module.exports = {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true
       }
+    },{
+      paranoid: true,
     })
   },
 

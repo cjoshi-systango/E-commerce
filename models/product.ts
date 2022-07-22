@@ -22,18 +22,23 @@ const product = sequelize.define('product',{
         allowNull:false
     },
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 productInventory.hasOne(product,{
-    foreignKey:"inventory_id"
+    foreignKey:"inventory_id",
+    onDelete:'cascade'
 });
 user.hasOne(product,{
-    foreignKey:"added_by"
+    foreignKey:"added_by",
+    onDelete:'cascade'
 });
 product.belongsTo(productInventory,{
-    foreignKey:"inventory_id"
+    foreignKey:"inventory_id",
+    onDelete:'cascade'
 })
 product.belongsTo(user,{
-    foreignKey:"added_by"
+    foreignKey:"added_by",
+    onDelete:'cascade'
 });
 export default product;

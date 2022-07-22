@@ -13,7 +13,8 @@ const productInventory = sequelize.define('product_inventory',{
         allowNull:false
     }
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 
 export default productInventory;

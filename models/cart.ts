@@ -1,5 +1,5 @@
 import sequelize from "../db/sequelizeConnection";
-import { DataTypes, Sequelize } from "sequelize";
+import { Association, DataTypes, Sequelize } from "sequelize";
 import user from "./user";
 import product from "./product";
 
@@ -19,11 +19,14 @@ const cart = sequelize.define('cart',{
         allowNull:false
     }
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
+
 })
+
 
 user.hasMany(cart);
 product.hasMany(cart);
 cart.belongsTo(user);
-cart.belongsTo(product);
+cart.belongsTo(product,{onDelete:'cascade'});
 export default cart;

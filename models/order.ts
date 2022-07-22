@@ -26,7 +26,8 @@ const order = sequelize.define('order',{
     }
     
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 user.hasMany(order);
 product.hasMany(order);

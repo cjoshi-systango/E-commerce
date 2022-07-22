@@ -26,7 +26,8 @@ const user_role = sequelize.define("user_role",{
     }
 
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 user_role.hasOne(user);
 user.belongsTo(user_role);
