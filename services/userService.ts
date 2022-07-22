@@ -4,6 +4,7 @@ import userAddress from '../models/userAddress'
 import userRole from '../models/userRole'
 import express from "express"
 import mailSender from "../utils/mail";
+import CommonResponse from "../constants/commonResponsesConstants";
 class UserServices {
     async registerUser(req: express.Request) {
         let userExist = await user.findOne({ where: { email: req.body.email } })
@@ -106,6 +107,19 @@ class UserServices {
         
     }
 
+    async updateUserDetails(req:any){
+        try {
+            if(req.body.name){
+                await user.update({name:req.body.name},{where:{id:req.user.id}})
+            }else if(req.body.email){
+                await user.update({email:req.body.email},{where:{id:req.user.id}})
+            }else if(req.body.mobile_no){
+                await user.update({mobile_no:req.body.mobile_no},{where:{id:req.user.id}})
+            }
+        } catch (error) {
+            return CommonResponse.SOMETHING_WENT_WRONG
+        }
+    }
 }
 
 const userServices = new UserServices();

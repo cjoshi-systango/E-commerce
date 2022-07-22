@@ -158,6 +158,35 @@ paths:
           description: successful operation
         400:
           description: Invalid email supplied
+  /update/userdetails:
+    post:
+      description: Update User Details
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: email
+        description: Enter password if want to edit
+        schema:
+          type: string
+      - in: query
+        name: name
+        description: Enter name if want to edit
+        schema:
+          type: string
+      - in: query
+        name: Mobile No
+        description: Enter mobile no if want to edit
+        schema:
+          type: string
+      responses:
+        200:
+          description: updated successfully 
+        400:
+          description: Invalid username/password supplied
   /addproduct:
     post:
       description: Add product
@@ -311,7 +340,7 @@ paths:
     post:
       description: remove item from cart
       tags:
-        - Cart
+        - Order
       produces:
       - application/json
       - application/xml
