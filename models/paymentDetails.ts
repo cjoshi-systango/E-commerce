@@ -17,7 +17,8 @@ const paymentDetails = sequelize.define('payment_details',{
         allowNull:false
     }
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 
 export default paymentDetails;

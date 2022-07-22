@@ -11,7 +11,9 @@ router.post("/insert/userrole",auth,userController.insertUserRole);
 
 router.post("/insert/useraddress",auth,validation.userAddressValidation,userController.addUserAddress);
 
-router.post("/login", passport.authenticate("local", {failureMessage: true}), userController.logInUser)
+router.post("/login",userController.authenticate)
+
+router.post("/login",userController.logInUser)
 
 router.get("/logout",auth,userController.logOutUser)
 

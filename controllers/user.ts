@@ -1,6 +1,7 @@
 import userServices from '../services/userService';
 import CommonResponse from '../constants/commonResponsesConstants';
 import express from "express"
+import passport from 'passport';
 class UserController {
     async registerUser(req:express.Request,res:express.Response) {
         try {
@@ -46,21 +47,28 @@ class UserController {
         }
     }
 
-    logInUser(req:express.Request,res:express.Response){
-        if(req.user == "incorrect password")
-        {
-            res.status(400).json({ success: false, data: "incorrect password" })
+    async logInUser(req:express.Request,res:express.Response,next:express.NextFunction){
+        try {
+            console.log(req.user)
+            
+            if(typeof req.user == "string")
+            {
+                res.status(200).json({ success: true, message: req.user })
+            }
+            else{
+                console.log(req.user);
+                res.status(200).json({ success: true, data: "loged in" })
+            }
+        } catch (error) {
+            res.status(500).json({ success: false, error:error});
+            
+        }
 
-        }
-        else if(req.user == "something wrong")
-        {
-            res.status(200).json({ success: true, data: "wrong email" })
+       
+    }
 
-        }
-        else{
-            console.log(req.user);
-            res.status(200).json({ success: true, data: "loged in" })
-        }
+    async authenticate(req:express.Request,res:express.Response,next:express.NextFunction){
+        await passport.authenticate("local", {failureMessage: true})(req,res,next);
     }
 
     logOutUser(req:express.Request,res:express.Response){

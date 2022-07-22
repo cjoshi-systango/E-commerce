@@ -17,6 +17,8 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false
       }
+    },{
+      paranoid: true,
     })
   },
 

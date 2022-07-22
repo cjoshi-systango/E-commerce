@@ -31,7 +31,8 @@ const user_address = sequelize.define("user_address",{
 
 
 },{
-    freezeTableName:true
+    freezeTableName:true,
+    paranoid: true
 })
 user.hasOne(user_address);
 user_address.belongsTo(user);
