@@ -105,6 +105,15 @@ class UserController {
             
         }
     }
+
+    async updateUserDetails(req:express.Request,res:express.Response){
+        try {
+            await userServices.updateUserDetails(req);
+            res.status(200).json({ success: true, message:"updated successfully"});
+        } catch (error) {
+            res.status(500).json({ success: false, error:error});
+        }
+    }
 }
 
 const userController = new UserController();

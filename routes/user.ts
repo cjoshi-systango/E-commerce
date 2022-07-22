@@ -21,4 +21,6 @@ router.put("/forgetpassword",validation.forgetPasswordValidation,userController.
 
 router.put("/resetpassword",auth,validation.resetPasswordValidation,userController.resetPassword)
 
+router.patch("/update/userdetails",auth,userController.updateUserDetails)
+
 export default router
