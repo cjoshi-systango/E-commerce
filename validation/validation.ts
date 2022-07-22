@@ -25,6 +25,35 @@ const validationForAddProduct = joi.object({
     details: joi.string().min(3).max(50).trim(true).required()
 });
 
+const validationForAddToCart = joi.object({
+    quantity: joi.number().required(),
+});
+
+const validationForOrder = joi.object({
+    quantity: joi.number().required(),
+});
+
+const validationForUserRole = joi.object({
+    title: joi.string().trim(true).required().valid("Admin","User","Seller"),
+	read: joi.boolean().required(),
+	write: joi.boolean().required(),
+	delete: joi.boolean().required()
+});
+
+const validationForForgetPassword = joi.object({
+    email: joi.string().trim(true).required(),
+});
+
+const validationForResetPassword = joi.object({
+    oldPassword: joi.string().trim(true).required(),
+    newPassword: joi.string().trim(true).required(),
+});
+
+const validationForLogin = joi.object({
+    email: joi.string().trim(true).required(),
+    password: joi.string().trim(true).required(),
+});
+
 class Validation{
 	async userValidation (req:any, res:any, next:any){
 		const userData = {
@@ -61,9 +90,6 @@ class Validation{
 	};
 
 	async addProductValidation (req:any, res:any, next:any){
-		console.log("----------------");
-		console.log(req.body.name);
-		
 		const productData = {
 			name: req.body.name,
 			details: req.body.details,
@@ -72,6 +98,87 @@ class Validation{
 		};
 	
 		const { error } = validationForAddProduct.validate(productData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+	async addToCartValidation (req:any, res:any, next:any){
+		const cartData = {
+			quantity: req.body.quantity,
+		};
+	
+		const { error } = validationForAddToCart.validate(cartData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+
+	async orderValidation (req:any, res:any, next:any){
+		const orderData = {
+			quantity: req.body.quantity,
+		};
+	
+		const { error } = validationForOrder.validate(orderData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+
+	async userRoleValidation (req:any, res:any, next:any){
+		const userRoleData = {
+			title:req.body.title,
+			read: req.body.read,
+			write: req.body.write,
+			delete: req.body.delete
+		};
+	
+		const { error } = validationForUserRole.validate(userRoleData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+
+	async loginValidation (req:any, res:any, next:any){
+		const loginData = {
+			email: req.body.email,
+			password: req.body.password
+		};
+	
+		const { error } = validationForLogin.validate(loginData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+	async forgetPasswordValidation (req:any, res:any, next:any){
+		const forgetPasswordData = {
+			email: req.body.email,
+		};
+	
+		const { error } = validationForForgetPassword.validate(forgetPasswordData);
+		if (error) {
+			return res.status(400).json({success:false,data:error});
+		} else {
+			next();
+		}
+	};
+
+	async resetPasswordValidation (req:any, res:any, next:any){
+		const resetPasswordData = {
+			oldPassword: req.body.oldPassword,
+			newPassword: req.body.newPassword,
+		};
+	
+		const { error } = validationForResetPassword.validate(resetPasswordData);
 		if (error) {
 			return res.status(400).json({success:false,data:error});
 		} else {
