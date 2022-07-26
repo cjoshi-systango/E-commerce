@@ -27,13 +27,15 @@ const user_address = sequelize.define("user_address",{
     pincode:{
         type:DataTypes.INTEGER,
         allowNull:false
+    },
+    address_type:{
+        type:DataTypes.STRING,
+        allowNull:false
     }
-
-
 },{
     freezeTableName:true,
-    paranoid: true
 })
 user.hasOne(user_address);
 user_address.belongsTo(user);
+
 export default user_address; 

@@ -16,18 +16,24 @@ module.exports = {
       status: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false
+      },
+      createdAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
       }
     },{
       paranoid: true,
+      timestamps: true
     })
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    
   }
 };

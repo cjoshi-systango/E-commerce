@@ -28,9 +28,22 @@ module.exports = {
       isActive: {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true
+      },
+      createdAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      deletedAt:{
+        type: Sequelize.DataTypes.DATE,
       }
     },{
-      paranoid: true,
+      timestamps: true
     })
   },
 

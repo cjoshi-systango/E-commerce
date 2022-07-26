@@ -20,10 +20,9 @@ const product = sequelize.define('product',{
     price:{
         type:DataTypes.STRING,
         allowNull:false
-    },
+    }
 },{
     freezeTableName:true,
-    paranoid: true
 })
 productInventory.hasOne(product,{
     foreignKey:"inventory_id",
@@ -41,4 +40,5 @@ product.belongsTo(user,{
     foreignKey:"added_by",
     onDelete:'cascade'
 });
+
 export default product;

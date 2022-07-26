@@ -147,6 +147,8 @@ class Validation{
 	};
 
 	async loginValidation (req:any, res:any, next:any){
+		console.log(req.body);
+		
 		const loginData = {
 			email: req.body.email,
 			password: req.body.password
