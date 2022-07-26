@@ -8,7 +8,6 @@ import CommonResponse from "../constants/commonResponsesConstants";
 class UserServices {
     async registerUser(req: express.Request) {
         let userExist = await user.findOne({ where: { email: req.body.email } })
-
         if (userExist === null) {
             let encryptedPassword = bcrypt.hashSync(req.body.password, 10);
             let userRoleId: number = 0

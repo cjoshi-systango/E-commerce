@@ -17,7 +17,7 @@ import fs from "fs"
 
 const PORT = process.env.PORT||4002
 const app = express();
-// sequelize.sync({alter:true});
+// sequelize.sync({force:true});
 passportInitialize(passport);
 const MemoryStore = new session.MemoryStore();
 let swaggerFile:any = (process.cwd()+"/swagger/swagger.json")

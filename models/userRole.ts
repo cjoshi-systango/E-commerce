@@ -27,8 +27,8 @@ const user_role = sequelize.define("user_role",{
 
 },{
     freezeTableName:true,
-    paranoid: true
 })
 user_role.hasOne(user);
 user.belongsTo(user_role);
+
 export default user_role; 

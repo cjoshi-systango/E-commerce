@@ -28,9 +28,23 @@ module.exports = {
       pincode: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false
+      },
+      createdAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      address_type: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
       }
     },{
-      paranoid: true,
+      timestamps: true
     })
   },
 

@@ -16,9 +16,19 @@ module.exports = {
       total_amount: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false
+      },
+      createdAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: new Date(),
+        allowNull: false
       }
     },{
-      paranoid: true,
+      timestamps: true
     })
   },
 

@@ -20,13 +20,12 @@ const cart = sequelize.define('cart',{
     }
 },{
     freezeTableName:true,
-    paranoid: true
-
 })
 
 
-user.hasMany(cart);
-product.hasMany(cart);
-cart.belongsTo(user);
+user.hasMany(cart,{onDelete:'cascade'});
+product.hasMany(cart,{onDelete:'cascade'});
+cart.belongsTo(user,{onDelete:'cascade'});
 cart.belongsTo(product,{onDelete:'cascade'});
+
 export default cart;
