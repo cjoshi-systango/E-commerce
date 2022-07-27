@@ -16,6 +16,8 @@ const validationForUserAddress = joi.object({
     city: joi.string().min(3).max(25).trim(true).required(),
     country: joi.string().min(3).max(25).trim(true).required(),
     pincode: joi.number().required(),
+    address_type: joi.string().trim(true).valid("Primary","Secondry").required(),
+
 });
 
 const validationForAddProduct = joi.object({
@@ -79,6 +81,7 @@ class Validation{
 			city: req.body.city,
 			country: req.body.country,
 			pincode: req.body.pincode,
+			address_type: req.body.address_type,
 		};
 	
 		const { error } = validationForUserAddress.validate(userAddress);
@@ -147,8 +150,6 @@ class Validation{
 	};
 
 	async loginValidation (req:any, res:any, next:any){
-		console.log(req.body);
-		
 		const loginData = {
 			email: req.body.email,
 			password: req.body.password

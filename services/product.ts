@@ -58,11 +58,6 @@ class ProductServices {
     }
 
     async deleteProduct(req:any){
-        
-        // let productToDelete:any = await product.findOne({where:{id:req.params.id,added_by:req.user.id},attributes:['deletedAt']})
-        // if(productToDelete.deletedAt){
-        //     product.update({deletedAt:})
-        // }
         await product.destroy({where:{id:req.params.id,added_by:req.user.id}    })    
     }
 }
