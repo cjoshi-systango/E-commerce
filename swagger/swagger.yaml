@@ -47,19 +47,12 @@ paths:
       produces:
       - application/json
       - application/xml
-      parameters:
-      - in: query
-        name: email
-        description: The email for login
+      requestBody:
         required: true
-        schema:
-          type: string
-      - in: query
-        name: password
-        description: The password for login in clear text
-        required: true
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/login'
       responses:
         200:
           description: successful operation
@@ -402,6 +395,8 @@ definations:
         type: string
       pincode:
         type: integer
+      address_type:
+        type: string
   product:
     type: object
     properties:
@@ -434,4 +429,11 @@ definations:
     properties:
       quantity:
         type: integer
+  login:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
       

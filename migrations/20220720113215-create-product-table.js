@@ -30,6 +30,10 @@ module.exports = {
         type: Sequelize.DataTypes.DATE,
         defaultValue: new Date(),
         allowNull: false
+      },
+      image:{
+        type: Sequelize.DataTypes.BLOB,
+        allowNull: false
       }
     },{
       timestamps: true

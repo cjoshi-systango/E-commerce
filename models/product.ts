@@ -20,6 +20,10 @@ const product = sequelize.define('product',{
     price:{
         type:DataTypes.STRING,
         allowNull:false
+    },
+    image:{
+      type: DataTypes.BLOB,
+      allowNull: false
     }
 },{
     freezeTableName:true,

@@ -5,15 +5,17 @@ import passport from 'passport';
 class UserController {
     async registerUser(req:express.Request,res:express.Response) {
         try {
-            let registerUser = await userServices.registerUser(req)
-            if(registerUser === CommonResponse.USER_ALREADY_EXSIST)
-            {
-                res.status(200).json({ success: true, data: CommonResponse.USER_ALREADY_EXSIST })
+            console.log(req);
+            
+            // let registerUser = await userServices.registerUser(req)
+            // if(registerUser === CommonResponse.USER_ALREADY_EXSIST)
+            // {
+            //     res.status(200).json({ success: true, data: CommonResponse.USER_ALREADY_EXSIST })
 
-            }else{
-                res.status(200).json({ success: true, data: CommonResponse.DATA_INSERTED })
+            // }else{
+            //     res.status(200).json({ success: true, data: CommonResponse.DATA_INSERTED })
 
-            }
+            // }
         } catch (error) {
             console.log(error);
             res.status(400).json({ success: true, data: CommonResponse.SOMETHING_WENT_WRONG })
@@ -37,13 +39,15 @@ class UserController {
 
     async addUserAddress(req:express.Request,res:express.Response){
         try {
-            await userServices.addUserAddress(req);
-            res.status(200).json({success:true,data:"insert successfully"})
-
-            
+            let isUserAddressExist = await userServices.addUserAddress(req);
+            if(typeof isUserAddressExist === 'string'){
+                res.status(200).json({success:true,message:isUserAddressExist})
+            }
+            else{
+                res.status(200).json({success:true,message:CommonResponse.DATA_INSERTED})
+            }
         } catch (error) {
             res.status(200).json({success:true,data:error})
-            
         }
     }
 

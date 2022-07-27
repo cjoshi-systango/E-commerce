@@ -6,6 +6,7 @@ import express from "express"
 import mailSender from "../utils/mail";
 import CommonResponse from "../constants/commonResponsesConstants";
 class UserServices {
+
     async registerUser(req: express.Request) {
         let userExist = await user.findOne({ where: { email: req.body.email } })
         if (userExist === null) {
@@ -53,18 +54,48 @@ class UserServices {
     
 
     async addUserAddress(req:any){
-        
-        
-        await userAddress.create({
-            userId:req.user.id,
-            address_line1:req.body.addressLine1,
-            address_line2:req.body.addressLine2,
-            city:req.body.city,
-            country:req.body.country,
-            pincode:req.body.pincode // primary or secondary and work or home 
-        })
-        
-        
+        try {
+            let isUserAddressExist:any = await userAddress.findAll({where:{userId:req.user.id}});
+            console.log(isUserAddressExist.length);
+            
+            if(isUserAddressExist.length > 0){
+                for(let index=0;index<isUserAddressExist.length;index++){
+                    if(isUserAddressExist[index].address_type === req.body.address_type){
+                        return `${isUserAddressExist[index].address_type} Address Already Exist`;
+                    }
+                    else{
+                        console.log("----------");
+                        
+                        await userAddress.create({
+                            userId:req.user.id,
+                            address_line1:req.body.addressLine1,
+                            address_line2:req.body.addressLine2,
+                            city:req.body.city,
+                            country:req.body.country,
+                            pincode:req.body.pincode,
+                            address_type: req.body.address_type
+                        })
+                    }
+                }
+                
+            }
+            else{
+                console.log("----------");
+                await userAddress.create({
+                    userId:req.user.id,
+                    address_line1:req.body.addressLine1,
+                    address_line2:req.body.addressLine2,
+                    city:req.body.city,
+                    country:req.body.country,
+                    pincode:req.body.pincode,
+                    address_type: req.body.address_type 
+                })
+            }
+
+            
+        } catch (error) {
+            return error
+        }
     }
 
     async findUserAddress(req:any){        

@@ -14,7 +14,8 @@ import cartRouter from "../routes/cart"
 import orderRouter from "../routes/order"
 import swaggerUi from "swagger-ui-express";
 import fs from "fs"
-
+import multer from "multer"
+const upload = multer()
 const PORT = process.env.PORT||4002
 const app = express();
 // sequelize.sync({force:true});
@@ -26,6 +27,7 @@ let swaggerdata = JSON.parse(fs.readFileSync(swaggerFile,'utf-8'));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(upload.array("img"));
 app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerdata))
 
 app.use(session({
