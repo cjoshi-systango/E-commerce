@@ -20,10 +20,6 @@ const product = sequelize.define('product',{
     price:{
         type:DataTypes.STRING,
         allowNull:false
-    },
-    image:{
-      type: DataTypes.BLOB,
-      allowNull: false
     }
 },{
     freezeTableName:true,
@@ -44,5 +40,8 @@ product.belongsTo(user,{
     foreignKey:"added_by",
     onDelete:'cascade'
 });
+product.addHook("beforeCreate",(product:any,option:any)=>{
+    
+})
 
 export default product;

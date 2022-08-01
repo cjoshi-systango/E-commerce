@@ -3,37 +3,49 @@ import order from "../models/order";
 import product from "../models/product";
 import productServices from "./product";
 import userServices from "./userService";
-class OrderServices{
-    async createOrder(req:any){
+import cartServices from "./cart";
+class OrderServices {
+    async createOrder(req: any) {
         let productAvailableInStock = await productServices.getProductQuantity(req);
-        console.log(req.body.quantity);
-        
-        if(productAvailableInStock>=req.body.quantity)
-        {
-            let userAddress:any = await userServices.findUserAddress(req);
-            if(userAddress){
-                let price:any = await productServices.getProductPrice(req)
-                let totalAmount = price * req.body.quantity;
-                console.log(totalAmount);
-                await order.create({quantity:req.body.quantity,userId:req.user.id,productId:req.params.id,amount:totalAmount})
+        if (productAvailableInStock >= req.body.quantity) {
+            let userAddress: any = await userServices.findUserAddress(req);
+            if (userAddress) {
+                let isProductInCart = await cartServices.showProductInCart(req);
+
+                if (typeof isProductInCart == "string") {
+
+                    let price: any = await productServices.getProductPrice(req)
+                    let totalAmount = price * req.body.quantity;
+                    console.log(totalAmount);
+                    await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount })
+
+                }
+                else{
+                    let price: any = await productServices.getProductPrice(req)
+                    let totalAmount = price * req.body.quantity;
+                    console.log(totalAmount);
+                    await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount })
+                    await cartServices.removeFromCart(req)
+                }
+
             }
-            else{
+            else {
                 return "please add address first";
             }
-            
+
         }
-        else{
+        else {
             return `Sorry only ${productAvailableInStock} left in stock`;
         }
     }
 
-    async getOrderHistory(req:any){
-        let orderByUser:any = await product.findOne({include:[{model:order,where:{userId:req.user.id}}]})
+    async getOrderHistory(req: any) {
+        let orderByUser: any = await product.findOne({ include: [{ model: order, where: { userId: req.user.id } }] })
         console.log(orderByUser.length);
-        
-        if(orderByUser){
+
+        if (orderByUser) {
             return orderByUser;
-        }else{
+        } else {
             return 'No order history';
         }
     }
