@@ -4,20 +4,29 @@ import userPermission from "../utils/userPermission";
 import productInventoryControler from "../controllers/productInventory";
 import sequelize from "../db/sequelizeConnection";
 import productInventory from "../models/productInventory";
+import productImage from "../models/productImage";
 class ProductServices {
     async addProduct(req: any) {
-        let temp = await userPermission.userPermissions(req).then((userPermission: any) => {
+        console.log(req.files);
+        let images = req.files
+        let arr : any[] =[]
+
+        let temp = await userPermission.userPermissions(req).then(async(userPermission: any) => {
             if (userPermission.write) {
                 console.log(userPermission.write);
                 
-                productInventoryControler.insertInInventory(req).then(async(inventoryId) => {    
-                    await product.create({
+                productInventoryControler.insertInInventory(req).then(async(inventoryId) => {  
+                    let productInfo:any = await product.create({
                         name: req.body.name,
                         details: req.body.details,
                         price: req.body.price,
                         added_by: req.user.id,
-                        inventory_id: inventoryId
+                        inventory_id: inventoryId,
                     });
+
+                    for(let index=0;index<images.length;index++){
+                        await productImage.create({image:images[index].buffer,productId:productInfo.id});
+                    }
                     console.log("product created");
                 });
             }

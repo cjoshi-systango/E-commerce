@@ -2,24 +2,16 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    queryInterface.createTable('product', {
+    queryInterface.createTable('product_image', {
       id: {
         type: Sequelize.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      name: {
-        type: Sequelize.DataTypes.STRING,
+      image: {
+        type: Sequelize.DataTypes.BLOB("long"),
         allowNull: false,
-      },
-      details: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false
-      },
-      price: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false
       },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
@@ -30,8 +22,8 @@ module.exports = {
         type: Sequelize.DataTypes.DATE,
         defaultValue: new Date(),
         allowNull: false
-      },
-    },{
+      }
+    }, {
       timestamps: true
     })
   },

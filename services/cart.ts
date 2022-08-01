@@ -43,6 +43,18 @@ class CartServices {
        
     }
 
+    async showProductInCart(req:any){
+
+        let cartData:any = await cart.findAll({where:{userId:req.user.id,productId:req.params.id}});
+        if(cartData.length>0){
+            return cartData
+        }
+        else{
+            return "cart is empty"
+        }
+       
+    }
+
     async removeFromCart(req:any){
         await cart.destroy({where:{productId:req.params.id,userId:req.user.id}})
     }

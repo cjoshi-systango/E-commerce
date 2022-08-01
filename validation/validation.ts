@@ -58,6 +58,8 @@ const validationForLogin = joi.object({
 
 class Validation{
 	async userValidation (req:any, res:any, next:any){
+		// console.log(req.body);
+		
 		const userData = {
 			fullname: req.body.fullname,
 			email: req.body.email,

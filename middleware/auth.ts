@@ -4,6 +4,8 @@ import user from "../models/user";
 
 const auth = async(req:any,res:any,next:any)=>{
     
+    console.log(req.session);
+    
     if(req.session.passport == undefined){
         res.status(400).json({success:false, message:" please login first "}); 
         return

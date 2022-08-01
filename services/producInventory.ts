@@ -2,7 +2,6 @@ import productInventory from "../models/productInventory";
 
 class ProductInventoryServices {
     insertInInventory(req: any) {
-        console.log("inside inventory");
         return new Promise((resolve,reject)=>{
             productInventory.create({ quantity: req.body.quantity })
             .then((inventory: any) => {
