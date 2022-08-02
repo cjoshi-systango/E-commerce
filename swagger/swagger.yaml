@@ -4,7 +4,7 @@ info:
   title: E-commerce
   description: api docs for e-commerce
 servers:
-  - url: http://localhost:4002/e-commerce
+  - url: http://localhost:4002
 components:
   securitySchemas:
     BasicAuth:
@@ -22,7 +22,7 @@ tags:
   - name: Product
     description: All the product realted api
 paths:
-  /register:
+  /user/:
     post:
       description: Register user
       tags:
@@ -39,120 +39,7 @@ paths:
       responses:
         default:
           description: Inserted Successfully
-  /login:
-    post:
-      description: login user
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definations/login'
-      responses:
-        200:
-          description: successful operation
-          schema:
-            type: string
-        400:
-          description: Invalid username/password supplied
-  /logout:
-    get:
-      description: loged out current user session
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      responses:
-        default:
-          description: loged out
-  /insert/userrole:
-    post:
-      description: only admin can create user role
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definations/User_role'
-      responses:
-        default:
-          description: Inserted successfully
-  /insert/useraddress:
-    post:
-      description: only loged in can add user address
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definations/User_address'
-      responses:
-        default:
-          description: Inserted successfully
-  /forgepassword:
-    put:
-      description: user forget password
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      parameters:
-      - in: query
-        name: email
-        description: Enter registred email 
-        required: true
-        type: string
-      responses:
-        200:
-          description: successful operation
-          schema:
-            type: string
-        400:
-          description: Invalid email supplied
-  /resetpassword:
-    put:
-      description: reset password 
-      tags:
-        - User
-      produces:
-      - application/json
-      - application/xml
-      parameters:
-      - in: query
-        name: oldpassword
-        description: Enter your password 
-        required: true
-        schema:
-          type: string
-      - in: query
-        name: newpassword
-        description: Enter new password 
-        required: true
-        type: string
-      responses:
-        200:
-          description: successful operation
-        400:
-          description: Invalid email supplied
-  /update/userdetails:
-    post:
+    patch:
       description: Update User Details
       tags:
         - User
@@ -180,7 +67,119 @@ paths:
           description: updated successfully 
         400:
           description: Invalid username/password supplied
-  /addproduct:
+  /user/login:
+    post:
+      description: login user
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/login'
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+        400:
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      description: loged out current user session
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        default:
+          description: loged out
+  /user/userrole:
+    post:
+      description: only admin can create user role
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/User_role'
+      responses:
+        default:
+          description: Inserted successfully
+  /user/useraddress:
+    post:
+      description: only loged in can add user address
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definations/User_address'
+      responses:
+        default:
+          description: Inserted successfully
+  /user/forgetpassword:
+    put:
+      description: user forget password
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: email
+        description: Enter registred email 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+        400:
+          description: Invalid email supplied
+  /user/resetpassword:
+    put:
+      description: reset password 
+      tags:
+        - User
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: query
+        name: oldpassword
+        description: Enter your password 
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: newpassword
+        description: Enter new password 
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid email supplied
+  /product/:
     post:
       description: Add product
       tags:
@@ -197,7 +196,6 @@ paths:
       responses:
         default:
           description: Inserted Successfully
-  /product:
     get:
       description: get all product
       tags:
@@ -238,7 +236,6 @@ paths:
           description: Invaid id
         404:
           description: not found
-  /product/{id}/delete:
     delete:
       description: get all product
       tags:
@@ -261,8 +258,8 @@ paths:
         400:
           description: Invaid id
         404:
-          description: not found
-  /product/{id}/addtocart:
+          description: not found 
+  /cart/{id}:
     post:
       description: add product to cart
       tags:
@@ -292,22 +289,6 @@ paths:
           description: Invaid id
         404:
           description: not found
-  /viewcart:
-    get:
-      description: add product to cart
-      tags:
-        - Cart
-      produces:
-      - application/json
-      - application/xml
-      responses:
-        200:
-          description: successfully operation
-          schema:
-            $ref: '#/definations/cart'
-        400:
-          description: Cart is empty
-  /viewcart/{id}/remove:
     delete:
       description: remove item from cart
       tags:
@@ -329,9 +310,24 @@ paths:
           description: added successfully
         400:
           description: Invaid id
-  /product/{id}/order:
+  /cart/:
+    get:
+      description: add product to cart
+      tags:
+        - Cart
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successfully operation
+          schema:
+            $ref: '#/definations/cart'
+        400:
+          description: Cart is empty
+  /order/{id}:
     post:
-      description: remove item from cart
+      description: place order
       tags:
         - Order
       produces:
