@@ -51,6 +51,20 @@ class ProductController{
             
         }
     }
+
+    async updateProduct(req:any,res:any){
+        try {
+            let isUpdated = await productServices.updateProduct(req);
+            if(typeof isUpdated == 'string'){
+                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:true,message:isUpdated});
+            }
+            else{
+                res.status(HttpConstant.HTTP_CREATED).json({success:true,data:CommonResponse.DATA_INSERTED})
+            }
+        } catch (error) {
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
+        }
+    }
 }
 
 const productController = new ProductController();
