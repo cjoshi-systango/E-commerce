@@ -4,20 +4,21 @@ import express from "express"
 import passport from 'passport';
 import jwt from "jsonwebtoken";
 import Credentials from "../constants/credentialsConstant"
+import {HttpConstant} from '../constants/httpStatusConstant';
 class UserController {
     async registerUser(req: express.Request, res: express.Response) {
         try {
             let registerUser = await userServices.registerUser(req)
             if (registerUser === CommonResponse.USER_ALREADY_EXSIST) {
-                res.status(200).json({ success: true, data: CommonResponse.USER_ALREADY_EXSIST })
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, data: CommonResponse.USER_ALREADY_EXSIST })
 
             } else {
-                res.status(200).json({ success: true, data: CommonResponse.DATA_INSERTED })
+                res.status(HttpConstant.HTTP_CREATED).json({ success: true, data: CommonResponse.DATA_INSERTED })
 
             }
         } catch (error) {
             console.log(error);
-            res.status(400).json({ success: true, data: CommonResponse.SOMETHING_WENT_WRONG })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, data: CommonResponse.SOMETHING_WENT_WRONG })
         }
     }
 
@@ -25,13 +26,13 @@ class UserController {
         try {
             let roleInserted = await userServices.insertUserRole(req);
             if (typeof roleInserted == "string") {
-                res.status(200).json({ success: true, message: roleInserted })
+                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({ success: true, message: roleInserted })
             }
             else {
-                res.status(200).json({ success: true, data: "insert successfully" })
+                res.status(HttpConstant.HTTP_CREATED).json({ success: true, data: "insert successfully" })
             }
         } catch (error) {
-            res.status(400).json({ success: false, data: error })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, data: error })
 
         }
     }
@@ -40,13 +41,13 @@ class UserController {
         try {
             let isUserAddressExist = await userServices.addUserAddress(req);
             if (typeof isUserAddressExist === 'string') {
-                res.status(200).json({ success: true, message: isUserAddressExist })
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: isUserAddressExist })
             }
             else {
-                res.status(200).json({ success: true, message: CommonResponse.DATA_INSERTED })
+                res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED })
             }
         } catch (error) {
-            res.status(200).json({ success: true, data: error })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, data: error })
         }
     }
 
@@ -58,12 +59,12 @@ class UserController {
                 const token = jwt.sign({ userId }, process.env.TOKEN_KEY || Credentials.TOKEN_KEY)
 
                 req.logIn(user, (err) => {
-                    return res.status(200).json({ success: true, message: "Loged In",data:token})
+                    return res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "Loged In",data:token})
                 })
             })(req, res, next)
 
         } catch (error) {
-            res.status(500).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
         }
 
 
@@ -71,7 +72,7 @@ class UserController {
 
     logOutUser(req: express.Request, res: express.Response) {
         req.session.destroy((err) => {
-            res.status(500).json({ success: false, error: err })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: err })
         });
         res.redirect("/login")
     }
@@ -79,10 +80,10 @@ class UserController {
     async forgetPassword(req: express.Request, res: express.Response) {
         try {
             await userServices.forgetPassword(req);
-            res.status(200).json({ success: true, message: "check your mail" });
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "check your mail" });
 
         } catch (error) {
-            res.status(500).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
 
         }
     }
@@ -91,15 +92,15 @@ class UserController {
         try {
             let isResetDone = await userServices.resetPassword(req);
             if (typeof isResetDone == 'string') {
-                res.status(200).json({ success: true, message: isResetDone });
+                res.status(HttpConstant.HTTP_NO_CONTENT).json({ success: true, message: isResetDone });
 
             }
             else {
-                res.status(200).json({ success: true, message: "check your mail" });
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "check your mail" });
             }
 
         } catch (error) {
-            res.status(500).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
 
         }
     }
@@ -107,22 +108,22 @@ class UserController {
     async updateUserDetails(req: express.Request, res: express.Response) {
         try {
             await userServices.updateUserDetails(req);
-            res.status(200).json({ success: true, message: "updated successfully" });
+            res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: "updated successfully" });
         } catch (error) {
-            res.status(500).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
         }
     }
 
     googleLogin(req:express.Request,res:express.Response){
         try {
             if(req.user){
-                res.status(200).json({success:true,message:"loged in",data:req.user})
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"loged in",data:req.user})
             }
             else{
-                res.status(200).json({success:true,message:CommonResponse.SOMETHING_WENT_WRONG})
+                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:true,message:CommonResponse.SOMETHING_WENT_WRONG})
             }
         } catch (error) {
-            
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
         }
     }
 }

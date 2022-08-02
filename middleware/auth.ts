@@ -3,6 +3,7 @@ import Credentials from "../constants/credentialsConstant";
 import user from "../models/user";
 import {Request,Response} from "express"
 import { errorMonitor } from "events";
+import {HttpConstant} from '../constants/httpStatusConstant'
 
 const auth = async(req:any,res:any,next:any)=>{
     
@@ -12,7 +13,7 @@ const auth = async(req:any,res:any,next:any)=>{
     
     
     if(!token){ 
-        res.status(400).json({success:false, message:" NO Token is provided "})
+        res.status(HttpConstant.HTTP_NOT_FOUND).json({success:false, message:" NO Token is provided "})
         return
     } 
     
@@ -29,7 +30,7 @@ const auth = async(req:any,res:any,next:any)=>{
     catch(error){
         console.log(error);
         
-        return res.status(400).json({success:false, message:"Invalid Token"})
+        return res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false, message:"Invalid Token"})
     }
 }
 

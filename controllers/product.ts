@@ -1,22 +1,22 @@
 import productServices from "../services/product";
 import CommonResponse from "../constants/commonResponsesConstants";
 import { string } from "joi";
+import {HttpConstant} from "../constants/httpStatusConstant"
 class ProductController{
     async addProduct(req:any,res:any){
         try {
             let productAdded = await productServices.addProduct(req);
             console.log(productAdded);
             if(typeof productAdded =="string"){
-             res.status(200).json({success:true,data:"",message:productAdded});
+             res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:true,message:productAdded});
 
             }
             else{
-             res.status(200).json({success:true,data:"Product add successfully"})
-
+             res.status(HttpConstant.HTTP_CREATED).json({success:true,data:CommonResponse.DATA_INSERTED})
             }
 
         } catch (error) {
-            res.status(400).json({success:false,data:error})
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,data:error})
         }
     }
 
@@ -24,9 +24,9 @@ class ProductController{
         try {
             let allProduct = await productServices.showAllProduct();
 
-            res.status(200).json({success:true,data:allProduct});
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data:allProduct});
         } catch (error) {
-            res.status(400).json({success:true,data:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:true,data:error});
             
         }
     }
@@ -34,9 +34,9 @@ class ProductController{
     async showOneProduct(req:any,res:any){
         try {
             let oneProduct = await productServices.showOneProduct(req.params.id);
-            res.status(200).json({success:true,data:oneProduct});
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data:oneProduct});
         } catch (error) {
-            res.status(400).json({success:true,data:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:true,data:error});
             
         }
     }
@@ -45,9 +45,9 @@ class ProductController{
         try {
             await productServices.deleteProduct(req);
 
-            res.status(200).json({success:true,message:"deleted successfully"});
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"deleted successfully"});
         } catch (error) {
-            res.status(500).json({success:false,error:"deleted successfully"});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
             
         }
     }
