@@ -1,6 +1,8 @@
 import orderServices from "../services/order";
 import CommonResponse from "../constants/commonResponsesConstants";
 import {Request,Response} from 'express'
+import {HttpConstant} from '../constants/httpStatusConstant';
+
 class OrderController{
     async createOrder(req:any,res:any){
         try {
@@ -9,13 +11,13 @@ class OrderController{
             
             if(typeof order == "string")
             {
-                res.status(400).json({success:false,message:order})
+                res.status(HttpConstant.HTTP_NOT_FOUND).json({success:false,message:order})
             }
             else{
-                res.status(400).json({success:false,message:CommonResponse.DATA_INSERTED});
+                res.status(HttpConstant.HTTP_CREATED).json({success:false,message:CommonResponse.DATA_INSERTED});
             }
         } catch (error) {
-            res.status(500).json({success:false,error:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
         }
     }
 
@@ -23,13 +25,13 @@ class OrderController{
         try {
             let orders = await orderServices.getOrderHistory(req);
             if(typeof orders == 'string'){
-                res.status(200).json({success:true,message:orders})
+                res.status(HttpConstant.HTTP_NO_CONTENT).json({success:true,message:orders})
             }
             else{
-                res.status(200).json({success:true,data:orders})
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data:orders})
             }
         } catch (error) {
-            res.status(500).json({success:false,error:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
             
         }
     }
