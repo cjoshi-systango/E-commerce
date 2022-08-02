@@ -53,8 +53,12 @@ class UserController {
     async logInUser(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
             passport.authenticate("local", (err, user) => {
+
+                let userId = user.id
+                const token = jwt.sign({ userId }, process.env.TOKEN_KEY || Credentials.TOKEN_KEY)
+
                 req.logIn(user, (err) => {
-                    return res.status(200).json({ success: true, message: "Loged In" })
+                    return res.status(200).json({ success: true, message: "Loged In",data:token})
                 })
             })(req, res, next)
 
@@ -106,6 +110,19 @@ class UserController {
             res.status(200).json({ success: true, message: "updated successfully" });
         } catch (error) {
             res.status(500).json({ success: false, error: error });
+        }
+    }
+
+    googleLogin(req:express.Request,res:express.Response){
+        try {
+            if(req.user){
+                res.status(200).json({success:true,message:"loged in",data:req.user})
+            }
+            else{
+                res.status(200).json({success:true,message:CommonResponse.SOMETHING_WENT_WRONG})
+            }
+        } catch (error) {
+            
         }
     }
 }

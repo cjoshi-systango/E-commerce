@@ -19,15 +19,9 @@ module.exports = {
       },
       password: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: false
       },
       mobile_no: {
         type: Sequelize.DataTypes.STRING(10),
-        allowNull: false,
-      },
-      isActive: {
-        type: Sequelize.DataTypes.BOOLEAN,
-        defaultValue: true
       },
       createdAt: {
         type: Sequelize.DataTypes.DATE,

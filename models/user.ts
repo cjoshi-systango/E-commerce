@@ -19,17 +19,17 @@ const user = sequelize.define("user",{
     },
     password:{
         type:DataTypes.STRING,
-        allowNull:false
     },
     mobile_no:{
         type:DataTypes.STRING(10),
-        allowNull:false,
     },   
-    isActive:{
-        type:DataTypes.BOOLEAN,
-        defaultValue:true
+    google_id:{
+        type:DataTypes.STRING,
+    },
+    provider:{
+        type:DataTypes.STRING,
+        defaultValue:"local"
     }
-
 },{
     freezeTableName:true,
 });

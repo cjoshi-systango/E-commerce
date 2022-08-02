@@ -4,8 +4,8 @@ import orderController from "../controllers/order";
 import validation from "../validation/validation";
 const router = express.Router();
 
-router.post("/product/:id/order",auth,validation.orderValidation,orderController.createOrder);
+router.post("/:id",auth,validation.orderValidation,orderController.createOrder);
 
-router.get("/order/history",auth,orderController.getOrderHistory)
+router.get("/history",auth,orderController.getOrderHistory)
 
 export default router
