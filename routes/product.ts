@@ -12,4 +12,6 @@ router.get("/:id",auth,productController.showOneProduct);
 
 router.delete("/:id",auth,productController.deleteProduct)
 
+router.put("/:id",auth,productController.updateProduct)
+
 export default router;
