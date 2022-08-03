@@ -22,9 +22,10 @@ router.put("/resetpassword",auth,validation.resetPasswordValidation,userControll
 
 router.patch("/",auth,userController.updateUserDetails)
 
-router.get("/auth/google",passport.authenticate("google",{scope:['email','profile']}));
+router.get("/auth/google",passport.authenticate("google", {scope: ["profile","email",],prompt: "consent"}));
 
 router.get("/auth/google/callback",passport.authenticate("google"),userController.googleLogin);
 
-// router.de
+router.delete("/",auth,userController.deleteUser)
+
 export default router

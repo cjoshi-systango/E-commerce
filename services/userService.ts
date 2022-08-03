@@ -5,6 +5,8 @@ import userRole from '../models/userRole'
 import express from "express"
 import mailSender from "../utils/mail";
 import CommonResponse from "../constants/commonResponsesConstants";
+import cart from "../models/cart";
+import { where } from "sequelize/types";
 class UserServices {
 
     async registerUser(req: express.Request) {
@@ -148,6 +150,18 @@ class UserServices {
             }
         } catch (error) {
             return CommonResponse.SOMETHING_WENT_WRONG
+        }
+    }
+
+    async deleteUser(req:any){
+        try {
+            let deleteTime = new Date();
+            await user.update({deletedAt:deleteTime},{where:{id:1}})
+            await userAddress.destroy({where:{userId:req.user.id}})
+            await cart.destroy({where:{userId:req.user.id}})
+            
+        } catch (error) {
+            throw error
         }
     }
 }

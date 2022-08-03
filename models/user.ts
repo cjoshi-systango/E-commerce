@@ -29,6 +29,9 @@ const user = sequelize.define("user",{
     provider:{
         type:DataTypes.STRING,
         defaultValue:"local"
+    },
+    deletedAt:{
+        type: DataTypes.DATE
     }
 },{
     freezeTableName:true,
