@@ -3,7 +3,7 @@ import userController from "../controllers/user";
 import passport from "passport";
 import validation from "../validation/validation";
 import auth from "../middleware/auth";
-import isLogedIn from "../middleware/googleAuth";
+
 const router = express.Router();
 
 router.post("/",validation.userValidation,userController.registerUser)
@@ -24,7 +24,7 @@ router.patch("/",auth,userController.updateUserDetails)
 
 router.get("/auth/google",passport.authenticate("google", {scope: ["profile","email",],prompt: "consent"}));
 
-router.get("/auth/google/callback",passport.authenticate("google"),userController.googleLogin);
+router.get("/auth/google/callback",userController.googleLogin);
 
 router.delete("/",auth,userController.deleteUser)
 

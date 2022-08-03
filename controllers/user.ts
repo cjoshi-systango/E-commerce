@@ -114,14 +114,13 @@ class UserController {
         }
     }
 
-    googleLogin(req:express.Request,res:express.Response){
+    googleLogin(req:express.Request,res:express.Response,next:express.NextFunction){
         try {
-            if(req.user){
-                res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"loged in",data:req.user})
-            }
-            else{
-                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:true,message:CommonResponse.SOMETHING_WENT_WRONG})
-            }
+            passport.authenticate("google", (err, user) => {
+                req.logIn(user, (err) => {
+                    return res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "Loged In",data:user})
+                })
+            })(req, res, next)
         } catch (error) {
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
         }
