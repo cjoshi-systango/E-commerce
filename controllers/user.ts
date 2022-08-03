@@ -126,6 +126,16 @@ class UserController {
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
         }
     }
+
+    async deleteUser(req:express.Request,res:express.Response){
+        try {
+            await userServices.deleteUser(req);   
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"deleted"})
+
+        } catch (error) {
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
+        }
+    }
 }
 
 const userController = new UserController();

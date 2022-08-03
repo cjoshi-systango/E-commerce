@@ -10,16 +10,13 @@ import oAuth2 from "passport-google-oauth2"
 const localStrategy = passportStategy.Strategy;
 
 export default () => {
-    passport.use(new localStrategy({ usernameField: "email", passwordField: "password" }, (email, password, done) => {
-        console.log("inside");
-
+    passport.use(new localStrategy({ usernameField: "email", passwordField: "password" }, (email, password, done) => {        
         try {
-            user.findOne({ where: { email: email } })
+            user.findOne({ where: { email: email,deletedAt:null } })
                 .then((user: any) => {
                     let passwordCheck = bcrypt.compareSync(password, user.password);
 
                     if (!passwordCheck) {
-                        console.log("sommmmmmmmmm");
                         return done(null, "incorrect password");
                     }
                     let userInfo = user.get();
@@ -33,9 +30,6 @@ export default () => {
                 })
         } catch (error) {
             console.log(error);
-            console.log("error");
-
-
         }
     }))
     let googleStrategy = oAuth2.Strategy
@@ -43,27 +37,28 @@ export default () => {
         clientID: process.env.CLIENT_ID || Credentials.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET || Credentials.CLIENT_SECRET,
         callbackURL: process.env.CALLBACK_URL || Credentials.CALLBACK_URL,
-        passReqToCallback: true
+        passReqToCallback: true,
     },
         async (req: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
-            console.log(req.body);
-            
+            try {
                 await user.findOrCreate({
                     where: {
                         google_id: profile.id,
                         fullname: profile.displayName,
                         email: profile.email,
                         provider: profile.provider,
-                        userRoleId:3
+                        userRoleId:3,
+                        deletedAt:null
                     }
                 })
                 
-                return done(null, accessToken)
-            
+                return done(null, accessToken)   
+            } catch (error) {
+                throw error
+            }
         }
     ))
     passport.serializeUser(function (user: any, cb: any) {
-
         return cb(null, user);
     });
 
