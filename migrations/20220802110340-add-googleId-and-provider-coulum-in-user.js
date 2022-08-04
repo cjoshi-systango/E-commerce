@@ -7,7 +7,7 @@ module.exports = {
         type: Sequelize.STRING
       });
       await queryInterface.addColumn('user', 'provider', {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM("local","google"),
         defaultValue:"local"
       });
       return Promise.resolve();

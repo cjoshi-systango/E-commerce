@@ -2,10 +2,9 @@ import product from "../models/product";
 import productInventoryServices from "./producInventory";
 import userPermission from "../utils/userPermission";
 import productInventoryControler from "../controllers/productInventory";
-import sequelize from "../db/sequelizeConnection";
 import productInventory from "../models/productInventory";
 import productImage from "../models/productImage";
-import { where } from "sequelize/types";
+
 class ProductServices {
     async addProduct(req: any) {
         console.log(req.files);
@@ -24,10 +23,12 @@ class ProductServices {
                         added_by: req.user.id,
                         inventory_id: inventoryId,
                     });
-
-                    for(let index=0;index<images.length;index++){
-                        await productImage.create({image:images[index].buffer,productId:productInfo.id});
+                    if(images){
+                        for(let index=0;index<images.length;index++){
+                            await productImage.create({image:images[index].buffer,productId:productInfo.id});
+                        }
                     }
+                    
                     console.log("product created");
                 });
             }
@@ -39,12 +40,12 @@ class ProductServices {
     }
     
     async showAllProduct(){
-        let allProduct:any = await product.findAll({include:productInventory});
+        let allProduct:any = await product.findAll({include:[productInventory,productImage]});
         return allProduct;
     }
 
     async showOneProduct(id:any){
-        let oneProduct:any = await product.findOne({where:{id:id},include:productInventory});
+        let oneProduct:any = await product.findOne({where:{id:id},include:[productInventory,productImage]});
         return oneProduct;
     }
 
@@ -90,7 +91,7 @@ class ProductServices {
             else if(req.files){
                 let isAddedBy:any = await product.findOne({where:{added_by:req.user.id}});
                 let images = req.files
-                if(isAddedBy.id==req.params.id){
+                if(isAddedBy.added_by==req.user.id){
                     for(let index=0;index<images.length;index++){
                         await productImage.update({image:images[index].buffer},{where:{productId:req.params.id}});
                     }

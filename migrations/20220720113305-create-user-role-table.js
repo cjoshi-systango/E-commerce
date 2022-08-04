@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false
       },
       title: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.ENUM("Admin","Seller","User"),
         allowNull: false,
       },
       read: {

@@ -9,7 +9,7 @@ const user_role = sequelize.define("user_role",{
         allowNull:false
     },
     title:{
-        type:DataTypes.STRING,
+        type:DataTypes.ENUM("Admin","Seller","User"),
         allowNull:false,
     },
     read:{

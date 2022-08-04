@@ -19,8 +19,7 @@ const auth = async (req: any, res: any, next: any) => {
         })
         let googleId = response.data.user_id;
         req.user = await user.findOne({where:{google_id:googleId}});
-        
-        next()
+        return req.user ? next() : res.status(HttpConstant.HTTP_NOT_FOUND).json({ success: false, message:"Account deleted"})
     }
     else {
         console.log(req.session);
@@ -40,7 +39,8 @@ const auth = async (req: any, res: any, next: any) => {
             req.user = await user.findOne({ where: { id: decoded.userId, deletedAt: null } });
             console.log(req.user);
 
-            next()
+            return req.user ? next() : res.status(HttpConstant.HTTP_NOT_FOUND).json({ success: false, message: "Account deleted" })
+            
         }
         catch (error) {
             console.log(error);

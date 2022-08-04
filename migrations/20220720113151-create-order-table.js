@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false
       },
       status: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.ENUM("yet to dispatch","Dispacthed","Dilevered"),
         allowNull: false,
         defaultValue: "yet to dispatch"
       },
