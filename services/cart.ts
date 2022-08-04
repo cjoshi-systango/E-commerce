@@ -45,8 +45,8 @@ class CartServices {
 
     async showProductInCart(req:any){
 
-        let cartData:any = await cart.findAll({where:{userId:req.user.id,productId:req.params.id}});
-        if(cartData.length>0){
+        let cartData:any = await cart.findOne({where:{userId:req.user.id,productId:req.params.id},include:product});
+        if(cartData){
             return cartData
         }
         else{

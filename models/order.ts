@@ -3,7 +3,7 @@ import { DataTypes, Sequelize } from "sequelize";
 import user from "./user";
 import product from "./product";
 import productInventory from "./productInventory";
-
+import cart from "./cart";
 const order = sequelize.define('order',{
     id:{
         type:DataTypes.INTEGER,
@@ -16,7 +16,7 @@ const order = sequelize.define('order',{
         allowNull:false
     },
     status:{
-        type:DataTypes.STRING,
+        type:DataTypes.ENUM("yet to dispatch","Dispatched","Dilivered"),
         allowNull:false,
         defaultValue:"yet to dispatch"
     },
@@ -32,6 +32,12 @@ const order = sequelize.define('order',{
 user.hasMany(order);
 product.hasMany(order);
 order.belongsTo(product);
+cart.hasMany(order,{
+    onDelete:"NO ACTION"
+});
+order.belongsTo(cart,{
+    onDelete:"NO ACTION"
+})
 order.addHook('afterCreate',async(order:any,option:any)=>{
     let inventoryId:any = await product.findOne({attributes:["inventory_id"],where:{id:order.productId}})
     await productInventory.increment({quantity:-order.quantity},{where:{id:inventoryId.inventory_id}});

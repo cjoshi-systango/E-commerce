@@ -27,7 +27,7 @@ const user = sequelize.define("user",{
         type:DataTypes.STRING,
     },
     provider:{
-        type:DataTypes.STRING,
+        type:DataTypes.ENUM("local","google"),
         defaultValue:"local"
     },
     deletedAt:{

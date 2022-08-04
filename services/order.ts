@@ -24,7 +24,7 @@ class OrderServices {
                     let price: any = await productServices.getProductPrice(req)
                     let totalAmount = price * req.body.quantity;
                     console.log(totalAmount);
-                    await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount })
+                    await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount, cartId:isProductInCart.id})
                     await cartServices.removeFromCart(req)
                 }
 
@@ -40,7 +40,7 @@ class OrderServices {
     }
 
     async getOrderHistory(req: any) {
-        let orderByUser: any = await product.findOne({ include: [{ model: order, where: { userId: req.user.id } }] })
+        let orderByUser: any = await order.findOne({ include: [{ model: product, where: { userId: req.user.id } }] })
         console.log(orderByUser.length);
 
         if (orderByUser) {
