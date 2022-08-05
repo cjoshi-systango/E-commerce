@@ -17,7 +17,7 @@ class OrderController{
                 res.status(HttpConstant.HTTP_CREATED).json({success:false,message:CommonResponse.DATA_INSERTED});
             }
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message: CommonResponse.SOMETHING_WENT_WRONG});
         }
     }
 
@@ -25,13 +25,13 @@ class OrderController{
         try {
             let orders = await orderServices.getOrderHistory(req);
             if(typeof orders == 'string'){
-                res.status(HttpConstant.HTTP_NO_CONTENT).json({success:true,message:orders})
+                res.status(HttpConstant.HTTP_NOT_FOUND).json({success:true,message:orders})
             }
             else{
                 res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data:orders})
             }
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,error:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG});
             
         }
     }

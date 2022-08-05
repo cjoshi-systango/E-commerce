@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post("/", auth, validation.addProductValidation,productController.addProduct);
 
-router.get("/",auth,productController.showAllProduct)
+router.get("/:id?",auth,productController.showProduct)
 
-router.get("/:id",auth,productController.showOneProduct);
+router.get("/search/:text?",auth,productController.showProductByUserText)
 
 router.delete("/:id",auth,productController.deleteProduct)
 

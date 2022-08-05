@@ -17,7 +17,7 @@ class CartController{
                 res.status(HttpConstant.HTTP_CREATED).json({success:true,data:CommonResponse.DATA_INSERTED});
             }
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,data:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG});
             
         }
     }
@@ -26,14 +26,14 @@ class CartController{
         try {
            let cartData = await cartServices.viewCart(req)
            if(typeof cartData == "string"){
-              res.status(HttpConstant.HTTP_NO_CONTENT).json({success:true,message:"cart is empty"});
+              res.status(HttpConstant.HTTP_NOT_FOUND).json({success:true,message:"cart is empty"});
            }
            else{
                 res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data:cartData});
            }
 
         } catch (error) {
-           res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,data:error});
+           res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG});
             
         }
     }
@@ -44,7 +44,7 @@ class CartController{
             res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"deleted successfully"});
 
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,data:error});
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG});
         }
     }
 }

@@ -10,15 +10,13 @@ class UserController {
         try {
             let registerUser = await userServices.registerUser(req)
             if (registerUser === CommonResponse.USER_ALREADY_EXSIST) {
-                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, data: CommonResponse.USER_ALREADY_EXSIST })
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: CommonResponse.USER_ALREADY_EXSIST })
 
             } else {
-                res.status(HttpConstant.HTTP_CREATED).json({ success: true, data: CommonResponse.DATA_INSERTED })
-
+                res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED })
             }
         } catch (error) {
-            console.log(error);
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, data: CommonResponse.SOMETHING_WENT_WRONG })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, message: CommonResponse.SOMETHING_WENT_WRONG })
         }
     }
 
@@ -32,7 +30,7 @@ class UserController {
                 res.status(HttpConstant.HTTP_CREATED).json({ success: true, data: "insert successfully" })
             }
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, data: error })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG })
 
         }
     }
@@ -47,7 +45,7 @@ class UserController {
                 res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED })
             }
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, data: error })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: true, message: CommonResponse.SOMETHING_WENT_WRONG })
         }
     }
 
@@ -64,7 +62,7 @@ class UserController {
             })(req, res, next)
 
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG });
         }
 
 
@@ -72,7 +70,7 @@ class UserController {
 
     logOutUser(req: express.Request, res: express.Response) {
         req.session.destroy((err) => {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: err })
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG })
         });
         res.redirect("/login")
     }
@@ -83,7 +81,7 @@ class UserController {
             res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "check your mail" });
 
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG });
 
         }
     }
@@ -92,15 +90,15 @@ class UserController {
         try {
             let isResetDone = await userServices.resetPassword(req);
             if (typeof isResetDone == 'string') {
-                res.status(HttpConstant.HTTP_NO_CONTENT).json({ success: true, message: isResetDone });
+                res.status(HttpConstant.HTTP_NOT_FOUND).json({ success: true, message: CommonResponse.INCORRECT_PASSWORD });
 
             }
             else {
-                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "check your mail" });
+                res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: CommonResponse.DATA_INSERTED });
             }
 
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG });
 
         }
     }
@@ -108,9 +106,9 @@ class UserController {
     async updateUserDetails(req: express.Request, res: express.Response) {
         try {
             await userServices.updateUserDetails(req);
-            res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: "updated successfully" });
+            res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED });
         } catch (error) {
-            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, error: error });
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG });
         }
     }
 
