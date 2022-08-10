@@ -28,4 +28,6 @@ router.get("/auth/google/callback",userController.googleLogin);
 
 router.delete("/",auth,userController.deleteUser)
 
+router.get("/",auth,userController.getUserDetails)
+
 export default router

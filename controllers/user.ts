@@ -106,8 +106,13 @@ class UserController {
 
     async updateUserDetails(req: express.Request, res: express.Response) {
         try {
-            await userServices.updateUserDetails(req);
-            res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED });
+            let isUserUpdated = await userServices.updateUserDetails(req);
+            if(typeof isUserUpdated == 'string'){
+                res.status(HttpConstant.HTTP_NOT_FOUND).json({ success: true, message: isUserUpdated });
+            }
+            else{
+                res.status(HttpConstant.HTTP_CREATED).json({ success: true, message: CommonResponse.DATA_INSERTED });
+            }
         } catch (error) {
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({ success: false, message: CommonResponse.SOMETHING_WENT_WRONG });
         }
@@ -130,6 +135,15 @@ class UserController {
             await userServices.deleteUser(req);   
             res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,message:"deleted"})
 
+        } catch (error) {
+            res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
+        }
+    }
+
+    async getUserDetails(req:express.Request,res:express.Response){
+        try {
+            let userData = await userServices.getUserDetails(req);
+            res.status(HttpConstant.HTTP_SUCCESS_OK).json({success:true,data: userData})
         } catch (error) {
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG})
         }
