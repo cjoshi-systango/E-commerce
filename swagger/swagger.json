@@ -116,29 +116,73 @@
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "email",
-            "description": "Enter password if want to edit",
+            "in": "header",
+            "name": "AccessToken",
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/User_update"
+              }
+            },
+            "example": {
+              "email": "xyz@gmail.com"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/notFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "get user details",
+        "tags": [
+          "User"
+        ],
+        "security": [
           {
-            "in": "query",
-            "name": "name",
-            "description": "Enter name if want to edit",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "Mobile No",
-            "description": "Enter mobile no if want to edit",
-            "schema": {
-              "type": "string"
-            }
-          },
+            "BearerAuth": [
+
+            ]
+          }
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
           {
             "in": "header",
             "name": "AccessToken",
@@ -148,11 +192,12 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
+            "description": "A User object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/definations/inserted"
+                  "$ref": "#/definations/responseSchema/user"
                 }
               }
             }
@@ -228,7 +273,7 @@
     },
     "/user/auth/google/callback": {
       "get": {
-        "description": "login user",
+        "description": "login with google",
         "tags": [
           "User"
         ],
@@ -700,7 +745,7 @@
     },
     "/product/{id}": {
       "get": {
-        "description": "get all product",
+        "description": "get product by id",
         "security": [
           {
             "BearerAuth": [
@@ -976,7 +1021,7 @@
     },
     "/cart/": {
       "get": {
-        "description": "add product to cart",
+        "description": "get products from cart",
         "security": [
           {
             "BearerAuth": [
@@ -1119,7 +1164,7 @@
     },
     "/order/history": {
       "get": {
-        "description": "place order",
+        "description": "see order history",
         "security": [
           {
             "BearerAuth": [
@@ -1241,6 +1286,45 @@
           "type": "integer"
         },
         "address_type": {
+          "type": "string",
+          "enum": [
+            "Primary",
+            "Secondry"
+          ]
+        }
+      }
+    },
+    "User_update": {
+      "type": "object",
+      "properties": {
+        "fullname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "mobile_no": {
+          "type": "string"
+        },
+        "addressLine1": {
+          "type": "string"
+        },
+        "addressLine2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "pincode": {
+          "type": "integer"
+        },
+        "addressType": {
           "type": "string",
           "enum": [
             "Primary",
@@ -1711,6 +1795,89 @@
                       "type": "string",
                       "format": "date-time"
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "fullname": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "googleId": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "mobile_no": {
+                "type": "string"
+              },
+              "userRoleId": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "user_address": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "address_line1": {
+                    "type": "string"
+                  },
+                  "address_line2": {
+                    "type": "string"
+                  },
+                  "address_type": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "pincode": {
+                    "type": "integer"
+                  },
+                  "userId": {
+                    "type": "integer"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                   }
                 }
               }

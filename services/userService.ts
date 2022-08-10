@@ -10,6 +10,8 @@ import { where } from "sequelize/types";
 
 const UNAUTHORIZED = "Unauthorized activity"
 const ALREADY_EXIST = "User already exist"
+const USER_NOT_FOUND = "User not found"
+
 class UserServices {
 
     async registerUser(req: express.Request) {
@@ -161,12 +163,39 @@ class UserServices {
 
     async updateUserDetails(req: any) {
         try {
-            if (req.body.name) {
-                await user.update({ name: req.body.name }, { where: { id: req.user.id } })
-            } else if (req.body.email) {
-                await user.update({ email: req.body.email }, { where: { id: req.user.id } })
-            } else if (req.body.mobile_no) {
-                await user.update({ mobile_no: req.body.mobile_no }, { where: { id: req.user.id } })
+            let isUserExist:any = await user.findOne({where:{id:req.user.id}})
+            let isUserAdderessExist:any = await userAddress.findOne({where:{userId:req.user.id}})
+            console.log(req.body);
+            
+            if(isUserExist){
+                if (req.body.name) {
+                    await user.update({ name: req.body.name }, { where: { id: req.user.id } })
+                } else if (req.body.email) {
+                    await user.update({ email: req.body.email }, { where: { id: req.user.id } })
+                } else if (req.body.mobile_no) {
+                    await user.update({ mobile_no: req.body.mobile_no }, { where: { id: req.user.id } })
+                } 
+                if(isUserAdderessExist){
+                    if (req.body.addressLine1) {
+                        await userAddress.update({ address_line1: req.body.addressLine1 }, {where:{userId:req.user.id}})
+                    } else if (req.body.addressLine2) {
+                        await userAddress.update({ address_line2: req.body.addressLine2 }, {where:{userId:req.user.id}})
+                    } else if (req.body.city) {
+                        await userAddress.update({ city: req.body.city }, {where:{userId:req.user.id}})
+                    } else if (req.body.country) {
+                        await userAddress.update({ country: req.body.country }, {where:{userId:req.user.id}})
+                    } else if (req.body.pincode) {
+                        await userAddress.update({ pincode: req.body.pincode }, {where:{userId:req.user.id}})
+                    } else if (req.body.addressType) {
+                        await userAddress.update({ address_type: req.body.addressType }, {where:{userId:req.user.id}})
+                    }
+                }
+                else{
+                    return USER_NOT_FOUND
+                }
+            }
+            else{
+                return USER_NOT_FOUND
             }
         } catch (error) {
             throw error
@@ -180,6 +209,15 @@ class UserServices {
             await userAddress.destroy({ where: { userId: req.user.id } })
             await cart.destroy({ where: { userId: req.user.id } })
 
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getUserDetails(req: any) {
+        try {
+            let userData = await user.findOne({ where: { id: req.user.id },include: userAddress})
+            return userData
         } catch (error) {
             throw error
         }
