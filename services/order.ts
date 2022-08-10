@@ -49,15 +49,16 @@ class OrderServices {
 
     async getOrderHistory(req: any) {
         try {
-            let orderByUser: any = await order.findOne({ include: [{ model: product, where: { userId: req.user.id } }] })
-            console.log(orderByUser.length);
-    
-            if (orderByUser) {
+            let orderByUser: any = await order.findAll({where: { userId: req.user.id },include: [{ model: product}] })
+            
+            if (orderByUser.length>0) {
                 return orderByUser;
             } else {
                 return ORDER_HISTORY_NOT_FOUND;
             }   
         } catch (error) {
+            console.log(error);
+            
             throw error
         }
     }

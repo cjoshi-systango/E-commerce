@@ -4,7 +4,7 @@ import cart from "../models/cart";
 import productServices from "./product";
 import product from "../models/product";
 import productInventory from "../models/productInventory";
-import { log } from "console";
+import productImage from "../models/productImage";
 const CART_EMPTY_MESSAGE = "Cart is empty";
 const OUT_OF_STOCK_MESSAGE = "Product out of stock";
 const QUANTITY_MESSAGE = "Requested quantity is not available is stock";
@@ -42,7 +42,7 @@ class CartServices {
 
     async viewCart(req:any){
         try {
-            let cartData:any = await cart.findAll({where:{userId:req.user.id},include:[{model: product,include:[productInventory]}]});
+            let cartData:any = await cart.findAll({where:{userId:req.user.id},include:[{model: product,include:[productInventory,productImage]}]});
             if(cartData.length>0){
                 return cartData
             }

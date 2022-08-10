@@ -21,13 +21,21 @@ const auth = async (req: any, res: any, next: any) => {
         console.log(req.session);
         const token = req.header('Authorization');
         let decoded: any
+        console.log(req.headers);
+        
+        console.log(token);
+        
         if (!token) {
             res.status(HttpConstant.HTTP_NOT_FOUND).json({ success: false, message: " NO Token is provided " })
             return
         }
 
         try {
-            decoded = jwt.verify(token, process.env.TOKEN_KEY || Credentials.TOKEN_KEY)
+            let tokenWithBearer = token.split(" ")
+            let tokenWithoutBearer = tokenWithBearer[1];
+            console.log(typeof tokenWithoutBearer);
+            
+            decoded = jwt.verify(tokenWithoutBearer, process.env.TOKEN_KEY || Credentials.TOKEN_KEY)
             console.log(decoded);
 
             req.user = await user.findOne({ where: { id: decoded.userId, deletedAt: null } });
