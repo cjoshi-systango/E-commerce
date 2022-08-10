@@ -45,6 +45,11 @@ class ProductServices {
         try {
             if (req.params.id) {
                 let oneProduct: any = await product.findOne({ where: { id: req.params.id }, include: [productInventory, productImage] });
+                let numberOfimages = oneProduct.product_images.length
+                for(let index=0;index<numberOfimages;index++){
+                    let bufferdata:any = oneProduct.product_images[index].image;
+                    oneProduct.product_images[index].image = Buffer.from(bufferdata).toString('base64');
+                }
                 return oneProduct;
             }
             else {

@@ -57,7 +57,8 @@ class UserController {
                 const token = jwt.sign({ userId }, process.env.TOKEN_KEY || Credentials.TOKEN_KEY)
 
                 req.logIn(user, (err) => {
-                    return res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "Loged In",data:token})
+                    res.append("Authorization",token)
+                    return res.status(HttpConstant.HTTP_SUCCESS_OK).json({ success: true, message: "Loged In"})
                 })
             })(req, res, next)
 

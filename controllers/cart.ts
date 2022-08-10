@@ -6,12 +6,8 @@ class CartController{
     async addToCart(req:any,res:any){
         try {
             let result =  await cartServices.addToCart(req);
-            if(result === "out of stock"){
-                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:false,data:"Can't add in Cart Out of stock"})
-            }
-            else if(result === "quantity error")
-            {
-                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:false,data:"Can't add more than Stock"})
+            if(typeof result == 'string'){
+                res.status(HttpConstant.HTTP_UNAUTHORIZED).json({success:false,data:result})
             }
             else{
                 res.status(HttpConstant.HTTP_CREATED).json({success:true,data:CommonResponse.DATA_INSERTED});

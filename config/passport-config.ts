@@ -48,7 +48,6 @@ export default () => {
                         email: profile.email,
                         provider: profile.provider,
                         userRoleId:3,
-                        deletedAt:null
                     }
                 })
                 
