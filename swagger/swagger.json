@@ -11,17 +11,12 @@
     }
   ],
   "components": {
-    "securitySchemas": {
-      "BasicAuth": {
+    "securitySchemes": {
+      "BearerAuth": {
         "type": "http",
-        "scheme": "basic"
+        "scheme": "bearer"
       }
     }
-  },
-  "security": {
-    "-BasicAuth": [
-
-    ]
   },
   "tags": [
     {
@@ -63,13 +58,55 @@
           }
         },
         "responses": {
-          "default": {
-            "description": "Inserted Successfully"
+          "200": {
+            "description": "A User object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "user already exist"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       },
       "patch": {
         "description": "Update User Details",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "User"
         ],
@@ -101,14 +138,33 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "updated successfully"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invalid username/password supplied"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -135,13 +191,88 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Loged In"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "type": "string"
+              }
             }
           },
-          "400": {
-            "description": "Invalid username/password supplied"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/google/callback": {
+      "get": {
+        "description": "login user",
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Loged In"
+                    },
+                    "data": {
+                      "type": "string",
+                      "default": "Loged In"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -149,12 +280,28 @@
     "/user/logout": {
       "get": {
         "description": "loged out current user session",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "User"
         ],
         "produces": [
           "application/json",
           "application/xml"
+        ],
+        "paramenters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "default": {
@@ -166,12 +313,28 @@
     "/user/userrole": {
       "post": {
         "description": "only admin can create user role",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "User"
         ],
         "produces": [
           "application/json",
           "application/xml"
+        ],
+        "paramenters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "requestBody": {
           "required": true,
@@ -184,8 +347,32 @@
           }
         },
         "responses": {
-          "default": {
-            "description": "Inserted successfully"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/unautorizedActivity"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -193,12 +380,28 @@
     "/user/useraddress": {
       "post": {
         "description": "only loged in can add user address",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "User"
         ],
         "produces": [
           "application/json",
           "application/xml"
+        ],
+        "paramenters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "requestBody": {
           "required": true,
@@ -211,8 +414,41 @@
           }
         },
         "responses": {
-          "default": {
-            "description": "Inserted successfully"
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -238,13 +474,32 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "check your mail"
+                    }
+                  }
+                }
+              }
             }
           },
-          "400": {
-            "description": "Invalid email supplied"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -252,6 +507,13 @@
     "/user/resetpassword": {
       "put": {
         "description": "reset password",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "User"
         ],
@@ -275,14 +537,42 @@
             "description": "Enter new password",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful operation"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invalid email supplied"
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/notFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -290,12 +580,36 @@
     "/product/": {
       "post": {
         "description": "Add product",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Product"
+        ],
+        "consumes": [
+          "multipart/form-data"
         ],
         "produces": [
           "application/json",
           "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "formData",
+            "name": "img",
+            "type": "file"
+          }
         ],
         "requestBody": {
           "required": true,
@@ -308,13 +622,44 @@
           }
         },
         "responses": {
-          "default": {
-            "description": "Inserted Successfully"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/unautorizedActivity"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       },
       "get": {
         "description": "get all product",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Product"
         ],
@@ -322,15 +667,33 @@
           "application/json",
           "application/xml"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definations/product"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/responseSchema/allproduct"
+                }
+              }
             }
           },
-          "400": {
-            "description": "Not found"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -338,6 +701,13 @@
     "/product/{id}": {
       "get": {
         "description": "get all product",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Product"
         ],
@@ -355,25 +725,45 @@
             "maximum": 10.0,
             "minimum": 1.0,
             "format": "int64"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definations/product"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/responseSchema/product"
+                }
+              }
             }
           },
-          "400": {
-            "description": "Invaid id"
-          },
-          "404": {
-            "description": "not found"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "get all product",
+        "description": "delete product",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Product"
         ],
@@ -391,17 +781,43 @@
             "maximum": 10.0,
             "minimum": 1.0,
             "format": "int64"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "deleted successfully"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invaid id"
-          },
-          "404": {
-            "description": "not found"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -409,6 +825,13 @@
     "/cart/{id}": {
       "post": {
         "description": "add product to cart",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Cart"
         ],
@@ -426,6 +849,13 @@
             "maximum": 10.0,
             "minimum": 1.0,
             "format": "integer"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -439,19 +869,53 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "added successfully"
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invaid id"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
           },
-          "404": {
-            "description": "not found"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
         "description": "remove item from cart",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Cart"
         ],
@@ -469,14 +933,43 @@
             "maximum": 10.0,
             "minimum": 1.0,
             "format": "integer"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "added successfully"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invaid id"
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -484,6 +977,13 @@
     "/cart/": {
       "get": {
         "description": "add product to cart",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Cart"
         ],
@@ -491,15 +991,51 @@
           "application/json",
           "application/xml"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "successfully operation",
-            "schema": {
-              "$ref": "#/definations/cart"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
             }
           },
-          "400": {
-            "description": "Cart is empty"
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/notFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -507,6 +1043,13 @@
     "/order/{id}": {
       "post": {
         "description": "place order",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
         "tags": [
           "Order"
         ],
@@ -524,6 +1067,13 @@
             "maximum": 10.0,
             "minimum": 1.0,
             "format": "integer"
+          },
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -537,11 +1087,89 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "added successfully"
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/inserted"
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Invaid id"
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/notFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/history": {
+      "get": {
+        "description": "place order",
+        "security": [
+          {
+            "BearerAuth": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "AccessToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/responseSchema/order"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/notFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definations/internalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -564,7 +1192,11 @@
           "type": "string"
         },
         "title": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Seller",
+            "User"
+          ]
         }
       }
     },
@@ -572,7 +1204,12 @@
       "type": "object",
       "properties": {
         "tilte": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Admin",
+            "Seller",
+            "User"
+          ]
         },
         "read": {
           "type": "boolean"
@@ -604,7 +1241,11 @@
           "type": "integer"
         },
         "address_type": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Primary",
+            "Secondry"
+          ]
         }
       }
     },
@@ -666,6 +1307,415 @@
         },
         "password": {
           "type": "string"
+        }
+      }
+    },
+    "inserted": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "message": {
+          "type": "string",
+          "default": "Inserted Successfully"
+        }
+      }
+    },
+    "internalServerError": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "message": {
+          "type": "string",
+          "default": "Someting Went Wrong"
+        }
+      }
+    },
+    "unautorizedActivity": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "message": {
+          "type": "string",
+          "default": "Unauthorized Activity"
+        }
+      }
+    },
+    "notFound": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "responseSchema": {
+      "allproduct": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "integer"
+                },
+                "inventory_id": {
+                  "type": "integer"
+                },
+                "added_by": {
+                  "type": "integer"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "product_inventory": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "quantity": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "product_image": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "image": {
+                      "type": "string"
+                    },
+                    "product_id": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "product": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "details": {
+                "type": "string"
+              },
+              "price": {
+                "type": "integer"
+              },
+              "inventory_id": {
+                "type": "integer"
+              },
+              "added_by": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "product_inventory": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "product_image": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "product_id": {
+                    "type": "integer"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "cart": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "quantity": {
+                "type": "string"
+              },
+              "productId": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "total_amount": {
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "product": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "integer"
+                  },
+                  "inventory_id": {
+                    "type": "integer"
+                  },
+                  "added_by": {
+                    "type": "integer"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "product_inventory": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "quantity": {
+                        "type": "integer"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "product_image": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "image": {
+                        "type": "string"
+                      },
+                      "product_id": {
+                        "type": "integer"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "order": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer"
+                },
+                "productId": {
+                  "type": "integer"
+                },
+                "userId": {
+                  "type": "integer"
+                },
+                "cartId": {
+                  "type": "integer"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "deletedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "default": null
+                },
+                "product": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "integer"
+                    },
+                    "inventory_id": {
+                      "type": "integer"
+                    },
+                    "added_by": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
