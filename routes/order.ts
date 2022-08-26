@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/:id",auth,validation.orderValidation,orderController.createOrder);
 
+router.post("/webhook",auth,orderController.webHook)
+
 router.get("/history",auth,orderController.getOrderHistory)
 
 export default router

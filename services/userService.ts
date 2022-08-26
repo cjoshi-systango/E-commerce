@@ -6,7 +6,6 @@ import express from "express"
 import mailSender from "../utils/mail";
 import CommonResponse from "../constants/commonResponsesConstants";
 import cart from "../models/cart";
-import { where } from "sequelize/types";
 
 const UNAUTHORIZED = "Unauthorized activity"
 const ALREADY_EXIST = "User already exist"
@@ -16,6 +15,7 @@ class UserServices {
 
     async registerUser(req: express.Request) {
         try {
+            // register user if not already exist
             let userExist = await user.findOne({ where: { email: req.body.email } })
             if (userExist === null) {
                 let encryptedPassword = bcrypt.hashSync(req.body.password, 10);
@@ -25,8 +25,6 @@ class UserServices {
                         console.log(userRole.id);
                         userRoleId = userRole.id
                     })
-                console.log(userRoleId);
-
                 let insertData: any = await user.create({
                     fullname: req.body.fullname,
                     email: req.body.email,
@@ -34,7 +32,6 @@ class UserServices {
                     mobile_no: req.body.mobile_no,
                     userRoleId: userRoleId
                 })
-                console.log(insertData.id);
                 return insertData;
             }
             else {
@@ -49,7 +46,6 @@ class UserServices {
     async insertUserRole(req: any) {
         try {
             let userTitle: any = await userRole.findOne({ attributes: ["title"], where: { id: req.user.userRoleId } })
-            console.log(userTitle.title);
             if (userTitle.title == "Admin") {
                 await userRole.create({
                     title: req.body.title,
@@ -69,9 +65,9 @@ class UserServices {
 
     async addUserAddress(req: any) {
         try {
+            // insert user address if that type of address does not exist
             let isUserAddressExist: any = await userAddress.findAll({ where: { userId: req.user.id } });
-            console.log(isUserAddressExist.length);
-
+    
             if (isUserAddressExist.length > 0) {
                 for (let index = 0; index < isUserAddressExist.length; index++) {
                     if (isUserAddressExist[index].address_type === req.body.address_type) {
@@ -122,6 +118,7 @@ class UserServices {
 
     async forgetPassword(req: express.Request) {
         try {
+            // set new random password and then send it in mail if user forget password
             let password: string = ""
             let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let charactersLength = characters.length;
@@ -129,8 +126,6 @@ class UserServices {
                 password += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
             let encryptedPassword = bcrypt.hashSync(password, 10);
-            console.log(password);
-
             await user.update({ password: encryptedPassword }, { where: { email: req.body.email } })
                 .then(() => {
                     mailSender.sendMail("chetanjoshi7568@gmail.com", password);
@@ -143,7 +138,7 @@ class UserServices {
 
     async resetPassword(req: any) {
         try {
-
+            // reset user password to new
             let userpassword: any = await user.findOne({ attributes: ['password'], where: { id: req.user.id } })
 
             let passwordcheck = bcrypt.compareSync(req.body.oldpassword, userpassword.password);
@@ -163,6 +158,7 @@ class UserServices {
 
     async updateUserDetails(req: any) {
         try {
+            // update user details
             let isUserExist:any = await user.findOne({where:{id:req.user.id}})
             let isUserAdderessExist:any = await userAddress.findOne({where:{userId:req.user.id}})
             console.log(req.body);

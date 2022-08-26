@@ -24,7 +24,8 @@ const validationForAddProduct = joi.object({
     name: joi.string().min(3).max(25).trim(true).required(),
     price: joi.number().required(),
     quantity: joi.number().required(),
-    details: joi.string().min(3).max(50).trim(true).required()
+    details: joi.string().min(3).max(50).trim(true).required(),
+	image: joi.string().pattern(/([a-zA-Z0-9\s_\\.\-:])+(.png|.jpg|.gif)$/)
 });
 
 const validationForAddToCart = joi.object({
@@ -94,13 +95,21 @@ class Validation{
 	};
 
 	async addProductValidation (req:any, res:any, next:any){
-		const productData = {
-			name: req.body.name,
-			details: req.body.details,
-			quantity: req.body.quantity,
-			price: req.body.price,
-		};
-	
+		let images = req.files
+		let nunberOfImages = images.length
+		let productData
+		for (let index = 0; index < nunberOfImages; index++) {
+			productData = {
+				name: req.body.name,
+				details: req.body.details,
+				quantity: req.body.quantity,
+				price: req.body.price,
+				image: images[index].originalname
+			};	
+		}
+		
+		console.log(req.files);
+		
 		const { error } = validationForAddProduct.validate(productData);
 		if (error) {
 			return res.status(400).json({success:false,data:error});

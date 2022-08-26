@@ -18,12 +18,14 @@ class CartServices {
             if (quantity >= req.body.quantity) {
                 let product:any = await cart.findOne({where:{productId:req.params.id,userId:req.user.id}})
                 if(product){
-                    let price :any= productServices.getProductPrice(req);
+                    let price :any= await productServices.getProductPrice(req);
                     let totalAmount = req.body.quantity * price;
                     await cart.increment({quantity:req.body.quantity,total_amount:totalAmount},{where:{productId:req.params.id,userId:req.user.id}})
                 }
                 else{
-                    let price :any= productServices.getProductPrice(req);
+                    let price :any= await productServices.getProductPrice(req);
+                    console.log(price);
+                    
                     let totalAmount = req.body.quantity * price;
                     await cart.create({ userId: req.user.id,productId:req.params.id,quantity:req.body.quantity,total_amount:totalAmount})
                 }

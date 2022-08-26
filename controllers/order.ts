@@ -7,7 +7,7 @@ class OrderController{
     async createOrder(req:any,res:any){
         try {
             let order = await orderServices.createOrder(req);
-            // console.log();
+            console.log(order);
             
             if(typeof order == "string")
             {
@@ -17,6 +17,8 @@ class OrderController{
                 res.status(HttpConstant.HTTP_CREATED).json({success:false,message:CommonResponse.DATA_INSERTED});
             }
         } catch (error) {
+            console.log(error);
+            
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message: CommonResponse.SOMETHING_WENT_WRONG});
         }
     }
@@ -32,6 +34,15 @@ class OrderController{
             }
         } catch (error) {
             res.status(HttpConstant.HTTP_INTERNAL_SERVER_ERROR).json({success:false,message:CommonResponse.SOMETHING_WENT_WRONG});
+            
+        }
+    }
+
+    async webHook(req:Request,res:Response){
+        try {
+            orderServices.webHook(req)
+        } catch (error) {
+            console.log(error);
             
         }
     }

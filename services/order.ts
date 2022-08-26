@@ -1,10 +1,11 @@
-import { Model } from "sequelize/types";
+import dotenv from 'dotenv'
+dotenv.config();
 import order from "../models/order";
 import product from "../models/product";
 import productServices from "./product";
 import userServices from "./userService";
 import cartServices from "./cart";
-
+const stripe = require('stripe')(process.env.SECRET_KEY);
 const ADDRESS_NOT_FOUND = "Please add address first";
 const ORDER_HISTORY_NOT_FOUND = "No order history"
 
@@ -23,7 +24,8 @@ class OrderServices {
                         let totalAmount = price * req.body.quantity;
                         console.log(totalAmount);
                         await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount })
-    
+                        let isPaymentIntented = this.makePayment(totalAmount)
+                        return isPaymentIntented
                     }
                     else{
                         let price: any = await productServices.getProductPrice(req)
@@ -31,6 +33,8 @@ class OrderServices {
                         console.log(totalAmount);
                         await order.create({ quantity: req.body.quantity, userId: req.user.id, productId: req.params.id, amount: totalAmount, cartId:isProductInCart.id})
                         await cartServices.removeFromCart(req)
+                        let isPaymentIntented = this.makePayment(totalAmount)
+                        return isPaymentIntented
                     }
     
                 }
@@ -45,6 +49,16 @@ class OrderServices {
         } catch (error) {
             throw error
         }   
+    }
+
+    async makePayment(amount:number){
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount,
+            currency: 'inr',
+            payment_method: 'pm_1LXmaOSESDVemvbfnOg9OS15',
+        });
+
+        return paymentIntent
     }
 
     async getOrderHistory(req: any) {
@@ -63,6 +77,17 @@ class OrderServices {
         }
     }
 
+    async webHook(req:any){
+        try {
+            const sig = req.headers['stripe-signature'];
+            console.log(sig);
+            
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 }
 
 let orderServices = new OrderServices;

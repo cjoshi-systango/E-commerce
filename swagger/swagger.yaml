@@ -376,13 +376,10 @@
             name: AccessToken
             schema:
               type: string
-          - in: formData
-            name: img
-            type: file
         requestBody:
           required: true
           content:
-            application/json:
+            multipart/form-data:
               schema:
                 $ref: '#/definations/product'
         responses:
@@ -611,13 +608,7 @@
             content:
               application/json:
                 schema:
-                  type: object
-                  properties:
-                    success: 
-                      type: boolean
-                      default: true
-                    data: 
-                      type: object
+                  $ref: '#/definations/responseSchema/cart'
           '404':
             content:
               application/json:
@@ -782,6 +773,9 @@
           type: integer
         price:
           type: integer
+        img: 
+          type: string
+          format: binary
     cart:
       type: object
       properties:
@@ -965,73 +959,75 @@
             type: boolean
             default: true
           data:
-            type: object
-            properties:
-              id:
-                type: integer
-              quantity:
-                type: string
-              productId:
-                type: integer
-              userId:
-                type: integer
-              total_amount: 
-                type: integer
-              createdAt: 
-                type: string
-                format: date-time
-              updatedAt: 
-                type: string
-                format: date-time
-              product:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-                  details:
-                    type: string
-                  price:
-                    type: integer
-                  inventory_id: 
-                    type: integer
-                  added_by: 
-                    type: integer
-                  createdAt: 
-                    type: string
-                    format: date-time
-                  updatedAt: 
-                    type: string
-                    format: date-time
-                  product_inventory: 
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      quantity:
-                        type: integer
-                      createdAt: 
-                        type: string
-                        format: date-time
-                      updatedAt: 
-                        type: string
-                        format: date-time
-                  product_image:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      image:
-                        type: string
-                      product_id:
-                        type: integer
-                      createdAt: 
-                        type: string
-                        format: date-time
-                      updatedAt: 
-                        type: string
-                        format: date-time     
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                quantity:
+                  type: string
+                productId:
+                  type: integer
+                userId:
+                  type: integer
+                total_amount: 
+                  type: integer
+                createdAt: 
+                  type: string
+                  format: date-time
+                updatedAt: 
+                  type: string
+                  format: date-time
+                product:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    details:
+                      type: string
+                    price:
+                      type: integer
+                    inventory_id: 
+                      type: integer
+                    added_by: 
+                      type: integer
+                    createdAt: 
+                      type: string
+                      format: date-time
+                    updatedAt: 
+                      type: string
+                      format: date-time
+                    product_inventory: 
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        quantity:
+                          type: integer
+                        createdAt: 
+                          type: string
+                          format: date-time
+                        updatedAt: 
+                          type: string
+                          format: date-time
+                    product_image:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        image:
+                          type: string
+                        product_id:
+                          type: integer
+                        createdAt: 
+                          type: string
+                          format: date-time
+                        updatedAt: 
+                          type: string
+                          format: date-time     
       order:
         type: object
         properties:

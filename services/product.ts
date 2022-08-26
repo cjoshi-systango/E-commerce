@@ -54,6 +54,14 @@ class ProductServices {
             }
             else {
                 let allProduct: any = await product.findAll({ include: [productInventory, productImage] });
+                allProduct.forEach((element:any) => {
+                    let numberOfimages = element.product_images.length
+                    for(let index=0;index<numberOfimages;index++){
+                        let bufferdata:any = element.product_images[index].image;
+                        element.product_images[index].image = Buffer.from(bufferdata).toString('base64');
+                    }
+                });
+                
                 return allProduct;
             }
         } catch (error) {
@@ -81,9 +89,12 @@ class ProductServices {
     async getProductPrice(req: any) {
         try {
             let price: any = await product.findOne({ attributes: ["price"], where: { id: req.params.id } })
-
+            console.log(price.price);
+            
             return price.price;   
         } catch (error) {
+            console.log("error");
+            
             throw error
         }
     }
